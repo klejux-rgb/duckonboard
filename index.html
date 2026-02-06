@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦆 DuckOnBoard - Find Your Perfect Board</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #0A0A0A;
+            color: #FFFFFF;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Theme Variables */
+        body.theme-standard-dark {
+            background: #0A0A0A;
+        }
+
+        body.theme-standard-light {
+            background: #F5F5F5;
+            color: #0A0A0A;
+        }
+
+        body.theme-pride {
+            background: linear-gradient(135deg, #FF0080 0%, #FF8C00 25%, #FFED00 50%, #00FF00 75%, #0080FF 100%);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background: #0A0A0A;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        body.theme-standard-light .app-container {
+            background: #FFFFFF;
+            color: #0A0A0A;
+        }
+
+        body.theme-pride .app-container {
+            background: #1A1A1A;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Screen management */
+        .screen {
+            display: none;
+            min-height: 600px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Header */
+        .header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #1A1A1A;
+        }
+
+        body.theme-standard-light .header {
+            border-bottom-color: #E0E0E0;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .btn-back {
+            background: none;
+            border: none;
+            color: #00D9FF;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .progress-indicator {
+            color: #666;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        body.theme-standard-light .header-title {
+            color: #0A0A0A;
+        }
+
+        /* Logo */
+        .logo-container {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .app-name {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00D9FF 0%, #00B8D4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .tagline {
+            font-size: 16px;
+            color: #B0B0B0;
+            font-weight: 300;
+        }
+
+        /* Content */
+        .content {
+            padding: 20px;
+        }
+
+        /* AdMob Banner */
+        .admob-banner {
+            height: 50px;
+            background: #1A1A1A;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 12px;
+            border: 1px dashed #333;
+            margin-bottom: 20px;
+        }
+
+        body.theme-standard-light .admob-banner {
+            background: #F0F0F0;
+            border-color: #CCC;
+        }
+
+        .admob-banner.hidden {
+            display: none;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 16px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00D9FF 0%, #00B8D4 100%);
+            color: #0A0A0A;
+            box-shadow: 0 8px 24px rgba(0, 217, 255, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 217, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: #1A1A1A;
+            color: #FFFFFF;
+            border: 2px solid #333;
+        }
+
+        body.theme-standard-light .btn-secondary {
+            background: #F5F5F5;
+            color: #0A0A0A;
+            border-color: #CCC;
+        }
+
+        .btn-secondary:hover {
+            border-color: #00D9FF;
+            background: #222;
+        }
+
+        body.theme-standard-light .btn-secondary:hover {
+            background: #E8E8E8;
+        }
+
+        .btn-skip {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 10px;
+            margin-bottom: 10px;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .btn-skip:hover {
+            opacity: 0.8;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: #333;
+        }
+
+        body.theme-standard-light .divider-line {
+            background: #CCC;
+        }
+
+        .divider-text {
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Benefits */
+        .benefits {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .benefits-title {
+            font-size: 14px;
+            color: #B0B0B0;
+            margin-bottom: 12px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #00D9FF;
+            margin-bottom: 8px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #FFFFFF;
+        }
+
+        body.theme-standard-light .form-label {
+            color: #0A0A0A;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slider-input {
+            width: 80px;
+            padding: 10px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            background: #1A1A1A;
+            color: #FFFFFF;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        body.theme-standard-light .slider-input {
+            background: #F5F5F5;
+            color: #0A0A0A;
+            border-color: #CCC;
+        }
+
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: #333;
+            outline: none;
+        }
+
+        body.theme-standard-light .slider {
+            background: #CCC;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00D9FF;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00D9FF;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Cards */
+        .card {
+            background: #1A1A1A;
+            border: 2px solid #222;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        body.theme-standard-light .card {
+            background: #F5F5F5;
+            border-color: #E0E0E0;
+        }
+
+        .card:hover {
+            border-color: #00D9FF;
+            transform: translateY(-2px);
+        }
+
+        .card.selected {
+            border-color: #00D9FF;
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .card-description {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .card-checkmark {
+            float: right;
+            font-size: 24px;
+            color: #00D9FF;
+            display: none;
+        }
+
+        .card.selected .card-checkmark {
+            display: block;
+        }
+
+        /* Results */
+        .result-main {
+            text-align: center;
+            padding: 30px 20px;
+            background: #1A1A1A;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        body.theme-standard-light .result-main {
+            background: #F5F5F5;
+        }
+
+        .result-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .result-value {
+            font-size: 64px;
+            font-weight: 800;
+            color: #00D9FF;
+            line-height: 1;
+        }
+
+        .result-unit {
+            font-size: 32px;
+            color: #666;
+        }
+
+        .result-range {
+            font-size: 16px;
+            color: #B0B0B0;
+            margin-top: 10px;
+        }
+
+        .result-advice {
+            background: #1A1A1A;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        body.theme-standard-light .result-advice {
+            background: #F5F5F5;
+        }
+
+        .result-advice h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #00D9FF;
+        }
+
+        .result-advice-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .seller-text-box {
+            background: #0A0A0A;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 15px 0;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #FFFFFF;
+        }
+
+        body.theme-standard-light .seller-text-box {
+            background: #FFFFFF;
+            color: #0A0A0A;
+            border-color: #CCC;
+        }
+
+        /* Rating */
+        .rating-section {
+            text-align: center;
+            padding: 20px;
+            background: #1A1A1A;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        body.theme-standard-light .rating-section {
+            background: #F5F5F5;
+        }
+
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .star {
+            font-size: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            filter: grayscale(1);
+            opacity: 0.3;
+        }
+
+        .star:hover,
+        .star.active {
+            filter: grayscale(0);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* Technical params */
+        .tech-params {
+            display: none;
+            background: #1A1A1A;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        body.theme-standard-light .tech-params {
+            background: #F5F5F5;
+        }
+
+        .tech-params.visible {
+            display: block;
+        }
+
+        .param-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        body.theme-standard-light .param-item {
+            border-bottom-color: #E0E0E0;
+        }
+
+        .param-item:last-child {
+            border-bottom: none;
+        }
+
+        .param-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .param-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        body.theme-standard-light .param-value {
+            color: #0A0A0A;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #00D9FF;
+            color: #0A0A0A;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .footer a {
+            color: #00D9FF;
+            text-decoration: none;
+        }
+
+        /* Settings Icon */
+        .settings-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #1A1A1A;
+            border: 2px solid #333;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .settings-icon:hover {
+            border-color: #00D9FF;
+            transform: rotate(90deg);
+        }
+
+        /* Settings Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1A1A1A;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        body.theme-standard-light .modal-content {
+            background: #FFFFFF;
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #00D9FF;
+        }
+
+        .modal-section {
+            margin-bottom: 25px;
+        }
+
+        .modal-section h3 {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .theme-option {
+            background: #0A0A0A;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        body.theme-standard-light .theme-option {
+            background: #F5F5F5;
+            border-color: #CCC;
+        }
+
+        .theme-option:hover {
+            border-color: #00D9FF;
+        }
+
+        .theme-option.active {
+            border-color: #00D9FF;
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .app-container {
+                border-radius: 0;
+                max-width: 100%;
+                height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body class="theme-standard-dark">
+    <!-- Settings Icon -->
+    <div class="settings-icon" onclick="openSettings()">⚙️</div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">⚙️ Ustawienia</div>
+            
+            <div class="modal-section">
+                <h3>🎨 Motyw</h3>
+                <div class="theme-option active" onclick="changeTheme('standard-dark')" data-theme="standard-dark">
+                    <span>Standard Dark</span>
+                    <span>✓</span>
+                </div>
+                <div class="theme-option" onclick="changeTheme('standard-light')" data-theme="standard-light">
+                    <span>Standard Light</span>
+                    <span>✓</span>
+                </div>
+                <div class="theme-option" onclick="changeTheme('pride')" data-theme="pride">
+                    <span>🌈 Pride</span>
+                    <span>✓</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="closeSettings()">Zamknij</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- App Container -->
+    <div class="app-container">
+        <!-- SCREEN 1: LAUNCH + LOGIN -->
+        <div class="screen active" id="screen-launch">
+            <div class="logo-container">
+                <div class="logo">
+                    <img id="mainLogo" src="logo-standard.png" alt="DuckOnBoard Logo">
+                </div>
+                <h1 class="app-name">DuckOnBoard</h1>
+                <p class="tagline">Find Your Perfect Board</p>
+            </div>
+
+            <div class="content">
+                <button class="btn btn-primary" onclick="startAnonymous()">
+                    <span>⚡</span>
+                    <span>Użyj bez logowania</span>
+                </button>
+
+                <div class="divider">
+                    <div class="divider-line"></div>
+                    <span class="divider-text">Lub zaloguj się</span>
+                    <div class="divider-line"></div>
+                </div>
+
+                <div class="benefits">
+                    <p class="benefits-title">💰 Rabaty i promocje czekają!</p>
+                    <div class="benefit-item">
+                        <span>✓</span>
+                        <span>Bez reklam na formularzach</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span>✓</span>
+                        <span>Historia w chmurze</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span>✓</span>
+                        <span>Powiadomienia o wyprzedażach</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="loginGoogle()">
+                    <span>G</span>
+                    <span>Zaloguj przez Google</span>
+                </button>
+                <button class="btn btn-secondary" onclick="loginFacebook()">
+                    <span>f</span>
+                    <span>Zaloguj przez Facebook</span>
+                </button>
+                <button class="btn btn-secondary" onclick="loginApple()">
+                    <span>🍎</span>
+                    <span>Zaloguj przez Apple</span>
+                </button>
+                <button class="btn btn-secondary" onclick="loginEmail()">
+                    <span>📧</span>
+                    <span>Zaloguj przez Email</span>
+                </button>
+            </div>
+
+            <div class="footer">
+                <a href="#">Privacy Policy</a> · 
+                <a href="#">Terms</a> · 
+                <a href="#">Contact</a>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: FORM 1/3 - BASIC DATA -->
+        <div class="screen" id="screen-form1">
+            <div class="header">
+                <div class="header-nav">
+                    <button class="btn-back" onclick="goBack()">←</button>
+                    <span class="progress-indicator">[1/3]</span>
+                    <div style="width:30px"></div>
+                </div>
+                <h2 class="header-title">O Tobie</h2>
+            </div>
+
+            <div class="content">
+                <div class="admob-banner" id="banner-form1">
+                    📢 AdMob Banner 300x50
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Twój wiek:</label>
+                    <div class="slider-container">
+                        <input type="number" class="slider-input" id="age-input" value="25" min="3" max="99" onchange="updateSlider('age')">
+                        <input type="range" class="slider" id="age-slider" min="3" max="99" value="25" oninput="updateInput('age')">
+                        <span>lat</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Twoja waga:</label>
+                    <div class="slider-container">
+                        <input type="number" class="slider-input" id="weight-input" value="70" min="20" max="150" onchange="updateSlider('weight')">
+                        <input type="range" class="slider" id="weight-slider" min="20" max="150" value="70" oninput="updateInput('weight')">
+                        <span>kg</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Twój wzrost:</label>
+                    <div class="slider-container">
+                        <input type="number" class="slider-input" id="height-input" value="175" min="100" max="220" onchange="updateSlider('height')">
+                        <input type="range" class="slider" id="height-slider" min="100" max="220" value="175" oninput="updateInput('height')">
+                        <span>cm</span>
+                    </div>
+                </div>
+
+                <button class="btn-skip" onclick="skipStep('form1')">Pomiń</button>
+                <button class="btn btn-primary" onclick="nextScreen('form2')">
+                    Dalej →
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: FORM 2/3 - LEVEL -->
+        <div class="screen" id="screen-form2">
+            <div class="header">
+                <div class="header-nav">
+                    <button class="btn-back" onclick="goBack()">←</button>
+                    <span class="progress-indicator">[2/3]</span>
+                    <div style="width:30px"></div>
+                </div>
+                <h2 class="header-title">Twoja jazda</h2>
+            </div>
+
+            <div class="content">
+                <div class="admob-banner" id="banner-form2">
+                    📢 AdMob Banner 300x50
+                </div>
+
+                <div class="form-label" style="margin-bottom: 20px;">Jak jeździsz?</div>
+
+                <div class="card" onclick="selectLevel('beginner')">
+                    <span class="card-checkmark">✓</span>
+                    <div class="card-icon">🌱</div>
+                    <div class="card-title">POCZĄTKUJĄCY</div>
+                    <div class="card-description">0-10 dni</div>
+                </div>
+
+                <div class="card" onclick="selectLevel('intermediate')">
+                    <span class="card-checkmark">✓</span>
+                    <div class="card-icon">🎿</div>
+                    <div class="card-title">ŚREDNIOZAAWANSOWANY</div>
+                    <div class="card-description">10-30 dni</div>
+                </div>
+
+                <div class="card" onclick="selectLevel('advanced')">
+                    <span class="card-checkmark">✓</span>
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title">ZAAWANSOWANY</div>
+                    <div class="card-description">30+ dni</div>
+                </div>
+
+                <div class="card" onclick="selectLevel('expert')">
+                    <span class="card-checkmark">✓</span>
+                    <div class="card-icon">🔥</div>
+                    <div class="card-title">EKSPERT</div>
+                    <div class="card-description">Pro rider</div>
+                </div>
+
+                <button class="btn-skip" onclick="skipStep('form2')">Pomiń</button>
+                <button class="btn btn-primary" onclick="nextScreen('form3')">
+                    Dalej →
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: FORM 3/3 - STYLE -->
+        <div class="screen" id="screen-form3">
+            <div class="header">
+                <div class="header-nav">
+                    <button class="btn-back" onclick="goBack()">←</button>
+                    <span class="progress-indicator">[3/3]</span>
+                    <div style="width:30px"></div>
+                </div>
+                <h2 class="header-title">Styl jazdy</h2>
+            </div>
+
+            <div class="content">
+                <div class="admob-banner" id="banner-form3">
+                    📢 AdMob Banner 300x50
+                </div>
+
+                <div class="form-label" style="margin-bottom: 10px;">Gdzie jeździsz?</div>
+                <div style="font-size: 14px; color: #666; margin-bottom: 20px;">
+                    (możesz wybrać kilka!)
+                </div>
+
+                <div class="card" onclick="toggleStyle('allmountain')">
+                    <span class="card-checkmark">✓</span>
+                    <div class="card-icon">🏔️</div>
+                    <div class="card-title">ALL-MOUNTAIN</div>
+                    <div class="card-description">Wszędzie trochę</div>
+                </div>
+
+                <div class="card" onclick="toggleStyle('freestyle')">
+                    <span class="card-checkmark">✓</span>
+                    <div class="card-icon">🎪</div>
+                    <div class="card-title">FREESTYLE</div>
+                    <div class="card-description">Park, trick'i</div>
+                </div>
+
+                <div class="card" onclick="toggleStyle('freeride')">
+                    <span class="card-checkmark">✓</span>
+                    <div class="card-icon">⛰️</div>
+                    <div class="card-title">FREERIDE</div>
+                    <div class="card-description">Poza trasami</div>
+                </div>
+
+                <div class="card" onclick="toggleStyle('powder')">
+                    <span class="card-checkmark">✓</span>
+                    <div class="card-icon">☁️</div>
+                    <div class="card-title">POWDER</div>
+                    <div class="card-description">Głęboki śnieg</div>
+                </div>
+
+                <button class="btn-skip" onclick="skipStep('form3')">Pomiń</button>
+                <button class="btn btn-primary" onclick="showResults()">
+                    Pokaż wyniki 🎯
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 5: RESULTS -->
+        <div class="screen" id="screen-results">
+            <div class="header">
+                <div class="header-nav">
+                    <button class="btn-back" onclick="goBack()">←</button>
+                    <div style="width:30px"></div>
+                    <div style="width:30px"></div>
+                </div>
+                <h2 class="header-title">🎯 Co kupić?</h2>
+            </div>
+
+            <div class="content">
+                <!-- Banner for EVERYONE -->
+                <div class="admob-banner">
+                    📢 AdMob Banner 300x50
+                </div>
+
+                <!-- Main Result -->
+                <div class="result-main">
+                    <div class="result-label">📏 DŁUGOŚĆ DESKI</div>
+                    <div class="result-value">
+                        <span id="result-length">156</span><span class="result-unit">cm</span>
+                    </div>
+                    <div class="result-range" id="result-range">Zakres: 153-159 cm</div>
+                </div>
+
+                <!-- Shopping Advice -->
+                <div class="result-advice" id="shopping-advice">
+                    <h3>💬 CZEGO SZUKAĆ W SKLEPIE:</h3>
+                    <div id="advice-list"></div>
+                </div>
+
+                <!-- Seller Text -->
+                <div class="result-advice">
+                    <h3>💡 POWIEDZ SPRZEDAWCY:</h3>
+                    <div class="seller-text-box" id="seller-text"></div>
+                    <button class="btn btn-secondary" onclick="copySellerText()">
+                        📋 Skopiuj opis
+                    </button>
+                </div>
+
+                <!-- Rating -->
+                <div class="rating-section">
+                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">
+                        Oceń rekomendację
+                    </div>
+                    <div class="star-rating" id="star-rating">
+                        <span class="star" onclick="rate(1)">⭐</span>
+                        <span class="star" onclick="rate(2)">⭐</span>
+                        <span class="star" onclick="rate(3)">⭐</span>
+                        <span class="star" onclick="rate(4)">⭐</span>
+                        <span class="star" onclick="rate(5)">⭐</span>
+                    </div>
+                </div>
+
+                <!-- Comment & Save (logged users only) -->
+                <div id="logged-actions">
+                    <button class="btn btn-secondary" onclick="showCommentBox()">
+                        💬 Dodaj komentarz
+                    </button>
+                    <button class="btn btn-secondary" onclick="saveToHistory()">
+                        📝 Zapisz do historii
+                    </button>
+                </div>
+
+                <!-- Technical Parameters (expandable) -->
+                <button class="btn btn-secondary" id="tech-toggle" onclick="toggleTechParams()">
+                    🤓 Pokaż parametry techniczne ▼
+                </button>
+
+                <div class="tech-params" id="tech-params">
+                    <h3 style="font-size: 18px; margin-bottom: 20px; color: #00D9FF;">
+                        🤓 Parametry techniczne
+                    </h3>
+                    
+                    <div class="param-item">
+                        <div class="param-label">📐 KSZTAŁT (Shape)</div>
+                        <div class="param-value" id="param-shape">---</div>
+                    </div>
+
+                    <div class="param-item">
+                        <div class="param-label">🏔️ PROFIL</div>
+                        <div class="param-value" id="param-profile">---</div>
+                    </div>
+
+                    <div class="param-item">
+                        <div class="param-label">💪 TWARDOŚĆ (Flex)</div>
+                        <div class="param-value" id="param-flex">---</div>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="toggleTechParams()">
+                        Zwiń ▲
+                    </button>
+                </div>
+
+                <!-- Restart -->
+                <button class="btn btn-primary" onclick="restart()" style="margin-top: 20px;">
+                    🔄 Nowa rekomendacja
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global State
+        let state = {
+            isLoggedIn: false,
+            currentScreen: 'launch',
+            screenHistory: [],
+            formData: {
+                age: null,
+                weight: null,
+                height: null,
+                level: null,
+                styles: []
+            },
+            results: {}
+        };
+
+        // Theme Management
+        function changeTheme(theme) {
+            document.body.className = `theme-${theme}`;
+            document.querySelectorAll('.theme-option').forEach(opt => {
+                opt.classList.remove('active');
+                if (opt.dataset.theme === theme) {
+                    opt.classList.add('active');
+                }
+            });
+            
+            // Update logo based on theme
+            const logo = document.getElementById('mainLogo');
+            if (logo) {
+                if (theme === 'pride') {
+                    logo.src = 'logo-pride.png';
+                } else {
+                    logo.src = 'logo-standard.png';
+                }
+            }
+            
+            localStorage.setItem('theme', theme);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'standard-dark';
+        changeTheme(savedTheme);
+
+        // Settings Modal
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+
+        // Navigation
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${screenId}`).classList.add('active');
+            
+            state.screenHistory.push(state.currentScreen);
+            state.currentScreen = screenId;
+
+            // Handle ads visibility
+            updateAdsVisibility();
+        }
+
+        function goBack() {
+            if (state.screenHistory.length > 0) {
+                const previousScreen = state.screenHistory.pop();
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById(`screen-${previousScreen}`).classList.add('active');
+                state.currentScreen = previousScreen;
+                updateAdsVisibility();
+            }
+        }
+
+        function nextScreen(screenId) {
+            showScreen(screenId);
+        }
+
+        function updateAdsVisibility() {
+            // Hide all banners first
+            document.querySelectorAll('.admob-banner').forEach(banner => {
+                banner.classList.add('hidden');
+            });
+
+            // Show banners based on screen and login status
+            if (!state.isLoggedIn) {
+                if (state.currentScreen === 'form1') {
+                    document.getElementById('banner-form1').classList.remove('hidden');
+                } else if (state.currentScreen === 'form2') {
+                    document.getElementById('banner-form2').classList.remove('hidden');
+                } else if (state.currentScreen === 'form3') {
+                    document.getElementById('banner-form3').classList.remove('hidden');
+                }
+            }
+
+            // Results screen - always show banner (logged + anonymous)
+            if (state.currentScreen === 'results') {
+                document.querySelectorAll('#screen-results .admob-banner').forEach(b => {
+                    b.classList.remove('hidden');
+                });
+            }
+        }
+
+        // Login Functions
+        function startAnonymous() {
+            state.isLoggedIn = false;
+            showToast('✅ Rozpoczęto bez logowania');
+            showScreen('form1');
+        }
+
+        function loginGoogle() {
+            state.isLoggedIn = true;
+            showToast('✅ Zalogowano przez Google');
+            showScreen('form1');
+        }
+
+        function loginFacebook() {
+            state.isLoggedIn = true;
+            showToast('✅ Zalogowano przez Facebook');
+            showScreen('form1');
+        }
+
+        function loginApple() {
+            state.isLoggedIn = true;
+            showToast('✅ Zalogowano przez Apple');
+            showScreen('form1');
+        }
+
+        function loginEmail() {
+            state.isLoggedIn = true;
+            showToast('✅ Zalogowano przez Email');
+            showScreen('form1');
+        }
+
+        // Form Input Sync
+        function updateInput(field) {
+            const slider = document.getElementById(`${field}-slider`);
+            const input = document.getElementById(`${field}-input`);
+            input.value = slider.value;
+        }
+
+        function updateSlider(field) {
+            const slider = document.getElementById(`${field}-slider`);
+            const input = document.getElementById(`${field}-input`);
+            slider.value = input.value;
+        }
+
+        // Skip Functions
+        function skipStep(step) {
+            if (step === 'form1') {
+                state.formData.age = null;
+                state.formData.weight = null;
+                state.formData.height = null;
+                showToast('⏭️ Pominięto dane podstawowe');
+                nextScreen('form2');
+            } else if (step === 'form2') {
+                state.formData.level = null;
+                showToast('⏭️ Pominięto poziom');
+                nextScreen('form3');
+            } else if (step === 'form3') {
+                state.formData.styles = [];
+                showToast('⏭️ Pominięto styl jazdy');
+                showResults();
+            }
+        }
+
+        // Level Selection
+        function selectLevel(level) {
+            document.querySelectorAll('#screen-form2 .card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            state.formData.level = level;
+        }
+
+        // Style Selection (Multi-select)
+        function toggleStyle(style) {
+            const card = event.currentTarget;
+            card.classList.toggle('selected');
+            
+            if (state.formData.styles.includes(style)) {
+                state.formData.styles = state.formData.styles.filter(s => s !== style);
+            } else {
+                state.formData.styles.push(style);
+            }
+        }
+
+        // Calculate Results
+        function showResults() {
+            // Collect form data
+            state.formData.age = parseInt(document.getElementById('age-input').value) || null;
+            state.formData.weight = parseInt(document.getElementById('weight-input').value) || null;
+            state.formData.height = parseInt(document.getElementById('height-input').value) || null;
+
+            // Calculate
+            calculateRecommendation();
+            
+            // Display results
+            displayResults();
+            
+            // Show results screen
+            showScreen('results');
+        }
+
+        function calculateRecommendation() {
+            const { age, weight, height, level, styles } = state.formData;
+            
+            // CHILDREN (<15 years) - Use height table
+            if (age !== null && age < 15) {
+                const lengthRange = getChildBoardLength(height);
+                state.results = {
+                    isChild: true,
+                    length: Math.round((lengthRange.min + lengthRange.max) / 2),
+                    rangeMin: lengthRange.min,
+                    rangeMax: lengthRange.max,
+                    shape: null,
+                    profile: null,
+                    flex: null
+                };
+                return;
+            }
+
+            // ADULTS - Calculate with formula
+            let baseLength = height ? height - 15 : 160;
+
+            // Weight correction
+            if (weight) {
+                if (weight < 50) baseLength -= 4;
+                else if (weight < 60) baseLength -= 2;
+                else if (weight >= 80 && weight < 90) baseLength += 2;
+                else if (weight >= 90) baseLength += 3;
+            }
+
+            // Level correction
+            if (level) {
+                if (level === 'beginner') baseLength -= 4;
+                else if (level === 'expert') baseLength += 2;
+            }
+
+            // Style correction
+            if (styles && styles.length > 0) {
+                if (styles.includes('freestyle')) baseLength -= 6;
+                if (styles.includes('freeride')) baseLength += 4;
+                if (styles.includes('powder')) baseLength += 10;
+            }
+
+            baseLength = Math.round(baseLength);
+
+            // Calculate shape, profile, flex ONLY if level AND styles are provided
+            let shape = null;
+            let profile = null;
+            let flex = null;
+
+            if (level && styles && styles.length > 0) {
+                // Shape
+                if (styles.includes('freestyle') && styles.length === 1) {
+                    shape = 'Twin';
+                } else if (styles.includes('freeride') || styles.includes('powder')) {
+                    shape = 'Directional';
+                } else {
+                    shape = 'Directional Twin';
+                }
+
+                // Profile
+                if (level === 'beginner') {
+                    profile = 'Rocker';
+                } else if (level === 'intermediate' && styles.includes('freestyle')) {
+                    profile = 'Flat';
+                } else if (level === 'advanced' || level === 'expert') {
+                    if (styles.includes('freestyle')) {
+                        profile = 'Hybrid';
+                    } else if (styles.includes('freeride')) {
+                        profile = 'Camber';
+                    } else {
+                        profile = 'Hybrid';
+                    }
+                } else {
+                    profile = 'Hybrid';
+                }
+
+                // Flex
+                let flexBase = 5;
+                if (level === 'beginner') flexBase = 3;
+                else if (level === 'intermediate') flexBase = 5;
+                else if (level === 'advanced') flexBase = 6;
+                else if (level === 'expert') flexBase = 7;
+
+                if (styles.includes('freestyle')) flexBase -= 1;
+                if (styles.includes('freeride')) flexBase += 1;
+                if (weight && weight > 85) flexBase += 1;
+                if (weight && weight < 55) flexBase -= 1;
+
+                flexBase = Math.max(1, Math.min(10, flexBase));
+                flex = flexBase;
+            }
+
+            state.results = {
+                isChild: false,
+                length: baseLength,
+                rangeMin: baseLength - 3,
+                rangeMax: baseLength + 3,
+                shape: shape,
+                profile: profile,
+                flex: flex,
+                hasFullData: (level && styles && styles.length > 0)
+            };
+        }
+
+        function getChildBoardLength(height) {
+            if (!height) return { min: 80, max: 90 };
+            
+            if (height <= 100) return { min: 80, max: 85 };
+            if (height <= 110) return { min: 85, max: 95 };
+            if (height <= 120) return { min: 95, max: 105 };
+            if (height <= 130) return { min: 105, max: 115 };
+            if (height <= 140) return { min: 115, max: 125 };
+            if (height <= 150) return { min: 125, max: 135 };
+            return { min: 130, max: 140 };
+        }
+
+        function displayResults() {
+            const { length, rangeMin, rangeMax, shape, profile, flex, isChild, hasFullData } = state.results;
+            const { level, styles } = state.formData;
+
+            // Length
+            document.getElementById('result-length').textContent = length;
+            document.getElementById('result-range').textContent = `Zakres: ${rangeMin}-${rangeMax} cm`;
+
+            // Shopping Advice
+            let adviceHTML = '';
+            if (isChild) {
+                adviceHTML = `
+                    <div class="result-advice-item">
+                        <span>✅</span>
+                        <span>Deska dziecięca ${rangeMin}-${rangeMax}cm</span>
+                    </div>
+                    <div class="result-advice-item">
+                        <span>✅</span>
+                        <span>Dla początkujących, miękka</span>
+                    </div>
+                    <div class="result-advice-item">
+                        <span>💡</span>
+                        <span>Pamiętaj - ważne żeby było wygodnie!</span>
+                    </div>
+                `;
+            } else if (hasFullData) {
+                const styleText = getStyleText(styles);
+                const levelText = getLevelText(level);
+                const flexText = getFlexText(flex);
+                
+                adviceHTML = `
+                    <div class="result-advice-item">
+                        <span>✅</span>
+                        <span>Deska ${styleText}</span>
+                    </div>
+                    <div class="result-advice-item">
+                        <span>✅</span>
+                        <span>Dla ${levelText}</span>
+                    </div>
+                    <div class="result-advice-item">
+                        <span>✅</span>
+                        <span>${flexText}</span>
+                    </div>
+                `;
+            } else {
+                adviceHTML = `
+                    <div class="result-advice-item">
+                        <span>✅</span>
+                        <span>Deska ${length}cm (±3cm)</span>
+                    </div>
+                    <div class="result-advice-item">
+                        <span>✅</span>
+                        <span>Uniwersalna, wszechstronna</span>
+                    </div>
+                    <div class="result-advice-item">
+                        <span>💡</span>
+                        <span><a href="#" onclick="restart(); return false;" style="color: #00D9FF;">Uzupełnij dane</a> dla dokładniejszej rekomendacji</span>
+                    </div>
+                `;
+            }
+            document.getElementById('advice-list').innerHTML = adviceHTML;
+
+            // Seller Text
+            let sellerText = '';
+            if (isChild) {
+                sellerText = `Szukam deski dziecięcej ${rangeMin}-${rangeMax}cm, miękkiej, dla początkujących.`;
+            } else if (hasFullData) {
+                const styleText = getStyleText(styles);
+                const flexText = getFlexText(flex);
+                sellerText = `Szukam deski ${styleText} ${length}cm, ${flexText.toLowerCase()}, dla ${getLevelText(level)}.`;
+            } else {
+                sellerText = `Szukam uniwersalnej deski około ${length}cm (±3cm), wszechstronnej.`;
+            }
+            document.getElementById('seller-text').textContent = sellerText;
+
+            // Technical Parameters
+            if (hasFullData && !isChild) {
+                document.getElementById('param-shape').textContent = getShapeText(shape);
+                document.getElementById('param-profile').textContent = getProfileText(profile);
+                document.getElementById('param-flex').textContent = `${flex}/10 - ${getFlexText(flex)}`;
+                document.getElementById('tech-toggle').style.display = 'block';
+            } else {
+                document.getElementById('tech-toggle').style.display = 'none';
+            }
+
+            // Show/hide logged user actions
+            document.getElementById('logged-actions').style.display = state.isLoggedIn ? 'block' : 'none';
+        }
+
+        function getStyleText(styles) {
+            if (!styles || styles.length === 0) return 'uniwersalnej';
+            if (styles.includes('allmountain')) return 'all-mountain';
+            if (styles.includes('freestyle')) return 'freestyle';
+            if (styles.includes('freeride')) return 'freeride';
+            if (styles.includes('powder')) return 'powder';
+            return 'uniwersalnej';
+        }
+
+        function getLevelText(level) {
+            const levels = {
+                'beginner': 'początkujących',
+                'intermediate': 'średniozaawansowanych',
+                'advanced': 'zaawansowanych',
+                'expert': 'ekspertów'
+            };
+            return levels[level] || 'wszystkich';
+        }
+
+        function getFlexText(flex) {
+            if (flex <= 3) return 'Miękka twardość';
+            if (flex <= 5) return 'Średnia twardość';
+            if (flex <= 7) return 'Średnio-twarda';
+            return 'Twarda';
+        }
+
+        function getShapeText(shape) {
+            if (shape === 'Twin') return 'Symetryczna (Twin)';
+            if (shape === 'Directional') return 'Kierunkowa (Directional)';
+            if (shape === 'Directional Twin') return 'Uniwersalna (Directional Twin)';
+            return '---';
+        }
+
+        function getProfileText(profile) {
+            if (profile === 'Rocker') return 'Rocker (Banana)';
+            if (profile === 'Camber') return 'Camber (Klasyczny)';
+            if (profile === 'Flat') return 'Flat (Płaski)';
+            if (profile === 'Hybrid') return 'Hybrid (Mieszany)';
+            return '---';
+        }
+
+        // Technical Parameters Toggle
+        function toggleTechParams() {
+            const techParams = document.getElementById('tech-params');
+            const toggle = document.getElementById('tech-toggle');
+            
+            if (techParams.classList.contains('visible')) {
+                techParams.classList.remove('visible');
+                toggle.innerHTML = '🤓 Pokaż parametry techniczne ▼';
+            } else {
+                techParams.classList.add('visible');
+                toggle.innerHTML = '🤓 Ukryj parametry techniczne ▲';
+            }
+        }
+
+        // Rating
+        function rate(stars) {
+            const starElements = document.querySelectorAll('.star');
+            starElements.forEach((star, index) => {
+                if (index < stars) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+            
+            showToast(`⭐ Oceniono na ${stars}/5 gwiazdek`);
+            
+            // Save rating
+            if (state.isLoggedIn) {
+                // Save to Firebase (simulated)
+                console.log('Saving rating to Firebase:', stars);
+            } else {
+                // Save locally
+                localStorage.setItem('lastRating', stars);
+            }
+        }
+
+        // Copy Seller Text
+        function copySellerText() {
+            const text = document.getElementById('seller-text').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('✅ Skopiowano do schowka!');
+            }).catch(() => {
+                showToast('❌ Nie udało się skopiować');
+            });
+        }
+
+        // Comment & Save (for logged users)
+        function showCommentBox() {
+            if (!state.isLoggedIn) {
+                showToast('⚠️ Zaloguj się aby dodać komentarz');
+                return;
+            }
+            showToast('💬 Funkcja komentarzy dostępna wkrótce!');
+        }
+
+        function saveToHistory() {
+            if (!state.isLoggedIn) {
+                showToast('⚠️ Zaloguj się aby zapisać');
+                return;
+            }
+            showToast('✅ Zapisano do historii!');
+            // Save to Firebase (simulated)
+            console.log('Saving to Firebase:', state.formData, state.results);
+        }
+
+        // Restart
+        function restart() {
+            state.formData = {
+                age: null,
+                weight: null,
+                height: null,
+                level: null,
+                styles: []
+            };
+            state.results = {};
+            state.screenHistory = [];
+            
+            // Reset form values
+            document.getElementById('age-input').value = 25;
+            document.getElementById('age-slider').value = 25;
+            document.getElementById('weight-input').value = 70;
+            document.getElementById('weight-slider').value = 70;
+            document.getElementById('height-input').value = 175;
+            document.getElementById('height-slider').value = 175;
+            
+            // Clear selections
+            document.querySelectorAll('.card').forEach(card => card.classList.remove('selected'));
+            document.querySelectorAll('.star').forEach(star => star.classList.remove('active'));
+            
+            showScreen('form1');
+        }
+
+        // Toast Notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('settingsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSettings();
+            }
+        });
+    </script>
+</body>
+</html>
