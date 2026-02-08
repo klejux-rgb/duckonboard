@@ -18,22 +18,38 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             padding: 20px;
+            overflow-y: auto;
         }
 
-        /* Theme Variables */
+        /* THEME SYSTEM */
         body.theme-standard-dark {
             background: #0A0A0A;
         }
 
+        body.theme-standard-dark .app-container {
+            background: #0A0A0A;
+            color: #FFFFFF;
+        }
+
         body.theme-standard-light {
             background: #F5F5F5;
+        }
+
+        body.theme-standard-light .app-container {
+            background: #FFFFFF;
             color: #0A0A0A;
         }
 
         body.theme-pride {
             background: linear-gradient(135deg, #FF0080 0%, #FF8C00 25%, #FFED00 50%, #00FF00 75%, #0080FF 100%);
+        }
+
+        body.theme-pride .app-container {
+            background: #1A1A1A;
+            color: #FFFFFF;
+            border: 3px solid rgba(255, 255, 255, 0.3);
         }
 
         .app-container {
@@ -42,39 +58,40 @@
             background: #0A0A0A;
             border-radius: 40px;
             box-shadow: 0 20px 60px rgba(0, 217, 255, 0.3);
-            overflow: hidden;
+            overflow: visible;
             position: relative;
         }
 
-        body.theme-standard-light .app-container {
-            background: #FFFFFF;
-            color: #0A0A0A;
-        }
-
-        body.theme-pride .app-container {
-            background: #1A1A1A;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-
-        /* Screen management */
+        /* CRITICAL FIX: Mobile scroll */
         .screen {
             display: none;
-            min-height: 600px;
+            min-height: auto;
+            height: auto;
+            overflow-y: auto;
+            padding-bottom: 60px;
         }
 
         .screen.active {
             display: block;
         }
 
-        /* Header */
         .header {
             padding: 20px;
             text-align: center;
             border-bottom: 1px solid #1A1A1A;
+            position: sticky;
+            top: 0;
+            background: #0A0A0A;
+            z-index: 10;
         }
 
         body.theme-standard-light .header {
             border-bottom-color: #E0E0E0;
+            background: #FFFFFF;
+        }
+
+        body.theme-pride .header {
+            background: #1A1A1A;
         }
 
         .header-nav {
@@ -109,7 +126,6 @@
             color: #0A0A0A;
         }
 
-        /* Logo */
         .logo-container {
             text-align: center;
             padding: 40px 20px 20px;
@@ -149,9 +165,9 @@
             font-weight: 300;
         }
 
-        /* Content */
         .content {
             padding: 20px;
+            padding-bottom: 80px;
         }
 
         /* AdMob Banner */
@@ -177,7 +193,7 @@
             display: none;
         }
 
-        /* Buttons */
+        /* BUTTON FIXES */
         .btn {
             width: 100%;
             padding: 16px;
@@ -192,6 +208,12 @@
             justify-content: center;
             gap: 10px;
             margin-bottom: 12px;
+            position: relative;
+        }
+
+        /* CRITICAL FIX: Całe pole przycisku klika */
+        .btn * {
+            pointer-events: none;
         }
 
         .btn-primary {
@@ -200,9 +222,25 @@
             box-shadow: 0 8px 24px rgba(0, 217, 255, 0.4);
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 12px 32px rgba(0, 217, 255, 0.5);
+        }
+
+        /* CRITICAL FIX: Disabled button styling */
+        .btn-primary:disabled {
+            background: #333333;
+            color: #666666;
+            opacity: 0.6;
+            cursor: not-allowed;
+            box-shadow: none;
+            pointer-events: all;
+        }
+
+        /* Pride theme buttons */
+        body.theme-pride .btn-primary:not(:disabled) {
+            background: linear-gradient(135deg, #FF0080 0%, #FF8C00 25%, #FFED00 50%, #00FF00 75%, #0080FF 100%);
+            color: #FFFFFF;
         }
 
         .btn-secondary {
@@ -226,23 +264,29 @@
             background: #E8E8E8;
         }
 
+        /* CRITICAL FIX: Bigger skip button */
         .btn-skip {
             background: none;
             border: none;
-            color: #666;
+            color: #999;
             font-size: 14px;
             cursor: pointer;
-            padding: 10px;
+            padding: 12px 20px;
             margin-bottom: 10px;
-            opacity: 0.5;
+            opacity: 0.7;
             transition: opacity 0.3s;
+            width: 100%;
+        }
+
+        /* FIX: Skip button clickable */
+        .btn-skip * {
+            pointer-events: none;
         }
 
         .btn-skip:hover {
-            opacity: 0.8;
+            opacity: 1;
         }
 
-        /* Divider */
         .divider {
             display: flex;
             align-items: center;
@@ -266,7 +310,6 @@
             font-weight: 500;
         }
 
-        /* Benefits */
         .benefits {
             text-align: center;
             margin: 20px 0;
@@ -362,7 +405,7 @@
             border: none;
         }
 
-        /* Cards */
+        /* Cards - SINGLE SELECT */
         .card {
             background: #1A1A1A;
             border: 2px solid #222;
@@ -371,6 +414,7 @@
             margin-bottom: 12px;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
         }
 
         body.theme-standard-light .card {
@@ -385,6 +429,7 @@
 
         .card.selected {
             border-color: #00D9FF;
+            border-width: 3px;
             background: rgba(0, 217, 255, 0.1);
         }
 
@@ -402,10 +447,13 @@
         .card-description {
             font-size: 14px;
             color: #666;
+            line-height: 1.4;
         }
 
         .card-checkmark {
-            float: right;
+            position: absolute;
+            top: 20px;
+            right: 20px;
             font-size: 24px;
             color: #00D9FF;
             display: none;
@@ -477,6 +525,7 @@
             gap: 10px;
             margin-bottom: 10px;
             font-size: 14px;
+            line-height: 1.5;
         }
 
         .seller-text-box {
@@ -712,16 +761,30 @@
             background: rgba(0, 217, 255, 0.1);
         }
 
+        .theme-option .checkmark {
+            display: none;
+            color: #00D9FF;
+        }
+
+        .theme-option.active .checkmark {
+            display: block;
+        }
+
         .hidden {
             display: none !important;
         }
 
-        /* Responsive */
+        /* Responsive - CRITICAL FIX */
         @media (max-width: 480px) {
             .app-container {
                 border-radius: 0;
                 max-width: 100%;
-                height: 100vh;
+                min-height: 100vh;
+            }
+            
+            body {
+                padding: 0;
+                align-items: flex-start;
             }
         }
     </style>
@@ -739,15 +802,15 @@
                 <h3>🎨 Motyw</h3>
                 <div class="theme-option active" onclick="changeTheme('standard-dark')" data-theme="standard-dark">
                     <span>Standard Dark</span>
-                    <span>✓</span>
+                    <span class="checkmark">✓</span>
                 </div>
                 <div class="theme-option" onclick="changeTheme('standard-light')" data-theme="standard-light">
                     <span>Standard Light</span>
-                    <span>✓</span>
+                    <span class="checkmark">✓</span>
                 </div>
                 <div class="theme-option" onclick="changeTheme('pride')" data-theme="pride">
                     <span>🌈 Pride</span>
-                    <span>✓</span>
+                    <span class="checkmark">✓</span>
                 </div>
             </div>
 
@@ -764,7 +827,7 @@
         <div class="screen active" id="screen-launch">
             <div class="logo-container">
                 <div class="logo">
-                    <img id="mainLogo" src="logo-standard.png" alt="DuckOnBoard Logo">
+                    <img id="mainLogo" src="logo-standard.png" alt="DuckOnBoard Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='🦆';">
                 </div>
                 <h1 class="app-name">DuckOnBoard</h1>
                 <p class="tagline">Find Your Perfect Board</p>
@@ -842,8 +905,8 @@
                 <div class="form-group">
                     <label class="form-label">Twój wiek:</label>
                     <div class="slider-container">
-                        <input type="number" class="slider-input" id="age-input" value="25" min="3" max="99" onchange="updateSlider('age')">
-                        <input type="range" class="slider" id="age-slider" min="3" max="99" value="25" oninput="updateInput('age')">
+                        <input type="number" class="slider-input" id="age-input" value="25" min="3" max="99" onchange="updateSlider('age'); validateForm1()">
+                        <input type="range" class="slider" id="age-slider" min="3" max="99" value="25" oninput="updateInput('age'); validateForm1()">
                         <span>lat</span>
                     </div>
                 </div>
@@ -851,8 +914,8 @@
                 <div class="form-group">
                     <label class="form-label">Twoja waga:</label>
                     <div class="slider-container">
-                        <input type="number" class="slider-input" id="weight-input" value="70" min="20" max="150" onchange="updateSlider('weight')">
-                        <input type="range" class="slider" id="weight-slider" min="20" max="150" value="70" oninput="updateInput('weight')">
+                        <input type="number" class="slider-input" id="weight-input" value="70" min="20" max="150" onchange="updateSlider('weight'); validateForm1()">
+                        <input type="range" class="slider" id="weight-slider" min="20" max="150" value="70" oninput="updateInput('weight'); validateForm1()">
                         <span>kg</span>
                     </div>
                 </div>
@@ -860,20 +923,21 @@
                 <div class="form-group">
                     <label class="form-label">Twój wzrost:</label>
                     <div class="slider-container">
-                        <input type="number" class="slider-input" id="height-input" value="175" min="100" max="220" onchange="updateSlider('height')">
-                        <input type="range" class="slider" id="height-slider" min="100" max="220" value="175" oninput="updateInput('height')">
+                        <input type="number" class="slider-input" id="height-input" value="175" min="100" max="220" onchange="updateSlider('height'); validateForm1()">
+                        <input type="range" class="slider" id="height-slider" min="100" max="220" value="175" oninput="updateInput('height'); validateForm1()">
                         <span>cm</span>
                     </div>
                 </div>
 
                 <button class="btn-skip" onclick="skipStep('form1')">Pomiń</button>
-                <button class="btn btn-primary" onclick="nextScreen('form2')">
-                    Dalej →
+                <button class="btn btn-primary" id="btn-form1-next" onclick="nextScreen('form2')">
+                    <span>Dalej</span>
+                    <span>→</span>
                 </button>
             </div>
         </div>
 
-        <!-- SCREEN 3: FORM 2/3 - LEVEL -->
+        <!-- SCREEN 3: FORM 2/3 - LEVEL (SINGLE SELECT) -->
         <div class="screen" id="screen-form2">
             <div class="header">
                 <div class="header-nav">
@@ -881,7 +945,7 @@
                     <span class="progress-indicator">[2/3]</span>
                     <div style="width:30px"></div>
                 </div>
-                <h2 class="header-title">Twoja jazda</h2>
+                <h2 class="header-title">Poziom jazdy</h2>
             </div>
 
             <div class="content">
@@ -889,7 +953,7 @@
                     📢 AdMob Banner 300x50
                 </div>
 
-                <div class="form-label" style="margin-bottom: 20px;">Jak jeździsz?</div>
+                <div class="form-label" style="margin-bottom: 20px;">Jaki jest Twój poziom?</div>
 
                 <div class="card" onclick="selectLevel('beginner')">
                     <span class="card-checkmark">✓</span>
@@ -920,13 +984,14 @@
                 </div>
 
                 <button class="btn-skip" onclick="skipStep('form2')">Pomiń</button>
-                <button class="btn btn-primary" onclick="nextScreen('form3')">
-                    Dalej →
+                <button class="btn btn-primary" id="btn-form2-next" disabled onclick="nextScreen('form3')">
+                    <span>Dalej</span>
+                    <span>→</span>
                 </button>
             </div>
         </div>
 
-        <!-- SCREEN 4: FORM 3/3 - STYLE -->
+        <!-- SCREEN 4: FORM 3/3 - STYLE (SINGLE SELECT!) -->
         <div class="screen" id="screen-form3">
             <div class="header">
                 <div class="header-nav">
@@ -942,42 +1007,40 @@
                     📢 AdMob Banner 300x50
                 </div>
 
-                <div class="form-label" style="margin-bottom: 10px;">Gdzie jeździsz?</div>
-                <div style="font-size: 14px; color: #666; margin-bottom: 20px;">
-                    (możesz wybrać kilka!)
-                </div>
+                <div class="form-label" style="margin-bottom: 20px;">Styl jazdy</div>
 
-                <div class="card" onclick="toggleStyle('allmountain')">
+                <div class="card" onclick="selectStyle('allmountain')">
                     <span class="card-checkmark">✓</span>
                     <div class="card-icon">🏔️</div>
                     <div class="card-title">ALL-MOUNTAIN</div>
-                    <div class="card-description">Wszędzie trochę</div>
+                    <div class="card-description">Wszędzie - stok, park, czasem poza</div>
                 </div>
 
-                <div class="card" onclick="toggleStyle('freestyle')">
+                <div class="card" onclick="selectStyle('freestyle')">
                     <span class="card-checkmark">✓</span>
                     <div class="card-icon">🎪</div>
                     <div class="card-title">FREESTYLE</div>
-                    <div class="card-description">Park, trick'i</div>
+                    <div class="card-description">Skoki, trick'i, park</div>
                 </div>
 
-                <div class="card" onclick="toggleStyle('freeride')">
+                <div class="card" onclick="selectStyle('freeride')">
                     <span class="card-checkmark">✓</span>
                     <div class="card-icon">⛰️</div>
                     <div class="card-title">FREERIDE</div>
-                    <div class="card-description">Poza trasami</div>
+                    <div class="card-description">Zjazdy poza przygotowanymi trasami</div>
                 </div>
 
-                <div class="card" onclick="toggleStyle('powder')">
+                <div class="card" onclick="selectStyle('powder')">
                     <span class="card-checkmark">✓</span>
                     <div class="card-icon">☁️</div>
-                    <div class="card-title">POWDER</div>
-                    <div class="card-description">Głęboki śnieg</div>
+                    <div class="card-title">POWDER (PUDER)</div>
+                    <div class="card-description">Głęboki, świeży śnieg</div>
                 </div>
 
                 <button class="btn-skip" onclick="skipStep('form3')">Pomiń</button>
-                <button class="btn btn-primary" onclick="showResults()">
-                    Pokaż wyniki 🎯
+                <button class="btn btn-primary" id="btn-form3-next" disabled onclick="showResults()">
+                    <span>Pokaż wyniki</span>
+                    <span>🎯</span>
                 </button>
             </div>
         </div>
@@ -1019,7 +1082,8 @@
                     <h3>💡 POWIEDZ SPRZEDAWCY:</h3>
                     <div class="seller-text-box" id="seller-text"></div>
                     <button class="btn btn-secondary" onclick="copySellerText()">
-                        📋 Skopiuj opis
+                        <span>📋</span>
+                        <span>Skopiuj opis</span>
                     </button>
                 </div>
 
@@ -1038,18 +1102,21 @@
                 </div>
 
                 <!-- Comment & Save (logged users only) -->
-                <div id="logged-actions">
+                <div id="logged-actions" style="display:none;">
                     <button class="btn btn-secondary" onclick="showCommentBox()">
-                        💬 Dodaj komentarz
+                        <span>💬</span>
+                        <span>Dodaj komentarz</span>
                     </button>
                     <button class="btn btn-secondary" onclick="saveToHistory()">
-                        📝 Zapisz do historii
+                        <span>📝</span>
+                        <span>Zapisz do historii</span>
                     </button>
                 </div>
 
                 <!-- Technical Parameters (expandable) -->
-                <button class="btn btn-secondary" id="tech-toggle" onclick="toggleTechParams()">
-                    🤓 Pokaż parametry techniczne ▼
+                <button class="btn btn-secondary" id="tech-toggle" onclick="toggleTechParams()" style="display:none;">
+                    <span>🤓 Pokaż parametry techniczne</span>
+                    <span>▼</span>
                 </button>
 
                 <div class="tech-params" id="tech-params">
@@ -1073,13 +1140,15 @@
                     </div>
 
                     <button class="btn btn-secondary" onclick="toggleTechParams()">
-                        Zwiń ▲
+                        <span>Zwiń</span>
+                        <span>▲</span>
                     </button>
                 </div>
 
                 <!-- Restart -->
                 <button class="btn btn-primary" onclick="restart()" style="margin-top: 20px;">
-                    🔄 Nowa rekomendacja
+                    <span>🔄</span>
+                    <span>Nowa rekomendacja</span>
                 </button>
             </div>
         </div>
@@ -1092,11 +1161,11 @@
             currentScreen: 'launch',
             screenHistory: [],
             formData: {
-                age: null,
-                weight: null,
-                height: null,
+                age: 25,
+                weight: 70,
+                height: 175,
                 level: null,
-                styles: []
+                style: null  // SINGLE value!
             },
             results: {}
         };
@@ -1111,7 +1180,7 @@
                 }
             });
             
-            // Update logo based on theme
+            // Update logo
             const logo = document.getElementById('mainLogo');
             if (logo) {
                 if (theme === 'pride') {
@@ -1128,7 +1197,7 @@
         const savedTheme = localStorage.getItem('theme') || 'standard-dark';
         changeTheme(savedTheme);
 
-        // Settings Modal
+        // Settings
         function openSettings() {
             document.getElementById('settingsModal').classList.add('active');
         }
@@ -1145,7 +1214,6 @@
             state.screenHistory.push(state.currentScreen);
             state.currentScreen = screenId;
 
-            // Handle ads visibility
             updateAdsVisibility();
         }
 
@@ -1164,31 +1232,21 @@
         }
 
         function updateAdsVisibility() {
-            // Hide all banners first
-            document.querySelectorAll('.admob-banner').forEach(banner => {
-                banner.classList.add('hidden');
-            });
+            document.querySelectorAll('.admob-banner').forEach(b => b.classList.add('hidden'));
 
-            // Show banners based on screen and login status
             if (!state.isLoggedIn) {
-                if (state.currentScreen === 'form1') {
-                    document.getElementById('banner-form1').classList.remove('hidden');
-                } else if (state.currentScreen === 'form2') {
-                    document.getElementById('banner-form2').classList.remove('hidden');
-                } else if (state.currentScreen === 'form3') {
-                    document.getElementById('banner-form3').classList.remove('hidden');
-                }
+                if (state.currentScreen === 'form1') document.getElementById('banner-form1').classList.remove('hidden');
+                if (state.currentScreen === 'form2') document.getElementById('banner-form2').classList.remove('hidden');
+                if (state.currentScreen === 'form3') document.getElementById('banner-form3').classList.remove('hidden');
             }
 
-            // Results screen - always show banner (logged + anonymous)
+            // Results - always show
             if (state.currentScreen === 'results') {
-                document.querySelectorAll('#screen-results .admob-banner').forEach(b => {
-                    b.classList.remove('hidden');
-                });
+                document.querySelectorAll('#screen-results .admob-banner').forEach(b => b.classList.remove('hidden'));
             }
         }
 
-        // Login Functions
+        // Login
         function startAnonymous() {
             state.isLoggedIn = false;
             showToast('✅ Rozpoczęto bez logowania');
@@ -1219,80 +1277,85 @@
             showScreen('form1');
         }
 
-        // Form Input Sync
+        // Form Input
         function updateInput(field) {
             const slider = document.getElementById(`${field}-slider`);
             const input = document.getElementById(`${field}-input`);
             input.value = slider.value;
+            state.formData[field] = parseInt(slider.value);
         }
 
         function updateSlider(field) {
             const slider = document.getElementById(`${field}-slider`);
             const input = document.getElementById(`${field}-input`);
             slider.value = input.value;
+            state.formData[field] = parseInt(input.value);
         }
 
-        // Skip Functions
+        // Validation
+        function validateForm1() {
+            const btn = document.getElementById('btn-form1-next');
+            const age = parseInt(document.getElementById('age-input').value);
+            const weight = parseInt(document.getElementById('weight-input').value);
+            const height = parseInt(document.getElementById('height-input').value);
+            
+            if (age >= 3 && age <= 99 && weight >= 20 && weight <= 150 && height >= 100 && height <= 220) {
+                btn.disabled = false;
+            } else {
+                btn.disabled = true;
+            }
+        }
+
+        // Skip
         function skipStep(step) {
             if (step === 'form1') {
                 state.formData.age = null;
                 state.formData.weight = null;
                 state.formData.height = null;
-                showToast('⏭️ Pominięto dane podstawowe');
+                showToast('⏭️ Pominięto dane');
                 nextScreen('form2');
             } else if (step === 'form2') {
                 state.formData.level = null;
                 showToast('⏭️ Pominięto poziom');
                 nextScreen('form3');
             } else if (step === 'form3') {
-                state.formData.styles = [];
-                showToast('⏭️ Pominięto styl jazdy');
+                state.formData.style = null;
+                showToast('⏭️ Pominięto styl');
                 showResults();
             }
         }
 
-        // Level Selection
+        // SINGLE SELECT - Level
         function selectLevel(level) {
-            document.querySelectorAll('#screen-form2 .card').forEach(card => {
-                card.classList.remove('selected');
-            });
+            document.querySelectorAll('#screen-form2 .card').forEach(card => card.classList.remove('selected'));
             event.currentTarget.classList.add('selected');
             state.formData.level = level;
+            document.getElementById('btn-form2-next').disabled = false;
         }
 
-        // Style Selection (Multi-select)
-        function toggleStyle(style) {
-            const card = event.currentTarget;
-            card.classList.toggle('selected');
-            
-            if (state.formData.styles.includes(style)) {
-                state.formData.styles = state.formData.styles.filter(s => s !== style);
-            } else {
-                state.formData.styles.push(style);
-            }
+        // SINGLE SELECT - Style
+        function selectStyle(style) {
+            document.querySelectorAll('#screen-form3 .card').forEach(card => card.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            state.formData.style = style;
+            document.getElementById('btn-form3-next').disabled = false;
         }
 
-        // Calculate Results
+        // Calculate & Display Results
         function showResults() {
-            // Collect form data
-            state.formData.age = parseInt(document.getElementById('age-input').value) || null;
-            state.formData.weight = parseInt(document.getElementById('weight-input').value) || null;
-            state.formData.height = parseInt(document.getElementById('height-input').value) || null;
+            if (state.formData.age === null) state.formData.age = parseInt(document.getElementById('age-input').value);
+            if (state.formData.weight === null) state.formData.weight = parseInt(document.getElementById('weight-input').value);
+            if (state.formData.height === null) state.formData.height = parseInt(document.getElementById('height-input').value);
 
-            // Calculate
             calculateRecommendation();
-            
-            // Display results
             displayResults();
-            
-            // Show results screen
             showScreen('results');
         }
 
         function calculateRecommendation() {
-            const { age, weight, height, level, styles } = state.formData;
+            const { age, weight, height, level, style } = state.formData;
             
-            // CHILDREN (<15 years) - Use height table
+            // Children
             if (age !== null && age < 15) {
                 const lengthRange = getChildBoardLength(height);
                 state.results = {
@@ -1307,10 +1370,9 @@
                 return;
             }
 
-            // ADULTS - Calculate with formula
+            // Adults
             let baseLength = height ? height - 15 : 160;
 
-            // Weight correction
             if (weight) {
                 if (weight < 50) baseLength -= 4;
                 else if (weight < 60) baseLength -= 2;
@@ -1318,67 +1380,43 @@
                 else if (weight >= 90) baseLength += 3;
             }
 
-            // Level correction
             if (level) {
                 if (level === 'beginner') baseLength -= 4;
                 else if (level === 'expert') baseLength += 2;
             }
 
-            // Style correction
-            if (styles && styles.length > 0) {
-                if (styles.includes('freestyle')) baseLength -= 6;
-                if (styles.includes('freeride')) baseLength += 4;
-                if (styles.includes('powder')) baseLength += 10;
+            // SINGLE style
+            if (style) {
+                if (style === 'freestyle') baseLength -= 6;
+                else if (style === 'freeride') baseLength += 4;
+                else if (style === 'powder') baseLength += 10;
             }
 
             baseLength = Math.round(baseLength);
 
-            // Calculate shape, profile, flex ONLY if level AND styles are provided
-            let shape = null;
-            let profile = null;
-            let flex = null;
+            let shape = null, profile = null, flex = null;
 
-            if (level && styles && styles.length > 0) {
+            if (level && style) {
                 // Shape
-                if (styles.includes('freestyle') && styles.length === 1) {
-                    shape = 'Twin';
-                } else if (styles.includes('freeride') || styles.includes('powder')) {
-                    shape = 'Directional';
-                } else {
-                    shape = 'Directional Twin';
-                }
+                if (style === 'freestyle') shape = 'Twin';
+                else if (style === 'freeride' || style === 'powder') shape = 'Directional';
+                else shape = 'Directional Twin';
 
                 // Profile
-                if (level === 'beginner') {
-                    profile = 'Rocker';
-                } else if (level === 'intermediate' && styles.includes('freestyle')) {
-                    profile = 'Flat';
-                } else if (level === 'advanced' || level === 'expert') {
-                    if (styles.includes('freestyle')) {
-                        profile = 'Hybrid';
-                    } else if (styles.includes('freeride')) {
-                        profile = 'Camber';
-                    } else {
-                        profile = 'Hybrid';
-                    }
-                } else {
-                    profile = 'Hybrid';
-                }
+                if (level === 'beginner') profile = 'Rocker';
+                else if (level === 'intermediate' && style === 'freestyle') profile = 'Flat';
+                else if ((level === 'advanced' || level === 'expert') && style === 'freestyle') profile = 'Hybrid';
+                else if ((level === 'advanced' || level === 'expert') && style === 'freeride') profile = 'Camber';
+                else if ((level === 'advanced' || level === 'expert') && style === 'powder') profile = 'Rocker';
+                else profile = 'Hybrid';
 
                 // Flex
-                let flexBase = 5;
-                if (level === 'beginner') flexBase = 3;
-                else if (level === 'intermediate') flexBase = 5;
-                else if (level === 'advanced') flexBase = 6;
-                else if (level === 'expert') flexBase = 7;
-
-                if (styles.includes('freestyle')) flexBase -= 1;
-                if (styles.includes('freeride')) flexBase += 1;
+                let flexBase = level === 'beginner' ? 3 : level === 'intermediate' ? 5 : level === 'advanced' ? 6 : 7;
+                if (style === 'freestyle') flexBase -= 1;
+                if (style === 'freeride' || style === 'powder') flexBase += 1;
                 if (weight && weight > 85) flexBase += 1;
                 if (weight && weight < 55) flexBase -= 1;
-
-                flexBase = Math.max(1, Math.min(10, flexBase));
-                flex = flexBase;
+                flex = Math.max(1, Math.min(10, flexBase));
             }
 
             state.results = {
@@ -1386,16 +1424,15 @@
                 length: baseLength,
                 rangeMin: baseLength - 3,
                 rangeMax: baseLength + 3,
-                shape: shape,
-                profile: profile,
-                flex: flex,
-                hasFullData: (level && styles && styles.length > 0)
+                shape,
+                profile,
+                flex,
+                hasFullData: !!(level && style)
             };
         }
 
         function getChildBoardLength(height) {
             if (!height) return { min: 80, max: 90 };
-            
             if (height <= 100) return { min: 80, max: 85 };
             if (height <= 110) return { min: 85, max: 95 };
             if (height <= 120) return { min: 95, max: 105 };
@@ -1407,213 +1444,102 @@
 
         function displayResults() {
             const { length, rangeMin, rangeMax, shape, profile, flex, isChild, hasFullData } = state.results;
-            const { level, styles } = state.formData;
+            const { level, style } = state.formData;
 
-            // Length
             document.getElementById('result-length').textContent = length;
             document.getElementById('result-range').textContent = `Zakres: ${rangeMin}-${rangeMax} cm`;
 
-            // Shopping Advice
             let adviceHTML = '';
             if (isChild) {
                 adviceHTML = `
-                    <div class="result-advice-item">
-                        <span>✅</span>
-                        <span>Deska dziecięca ${rangeMin}-${rangeMax}cm</span>
-                    </div>
-                    <div class="result-advice-item">
-                        <span>✅</span>
-                        <span>Dla początkujących, miękka</span>
-                    </div>
-                    <div class="result-advice-item">
-                        <span>💡</span>
-                        <span>Pamiętaj - ważne żeby było wygodnie!</span>
-                    </div>
+                    <div class="result-advice-item"><span>✅</span><span>Deska dziecięca ${rangeMin}-${rangeMax}cm</span></div>
+                    <div class="result-advice-item"><span>✅</span><span>Dla początkujących, miękka</span></div>
+                    <div class="result-advice-item"><span>💡</span><span>Ważne żeby było wygodnie!</span></div>
                 `;
             } else if (hasFullData) {
-                const styleText = getStyleText(styles);
-                const levelText = getLevelText(level);
-                const flexText = getFlexText(flex);
-                
+                const styleText = {allmountain: 'all-mountain', freestyle: 'freestyle', freeride: 'freeride', powder: 'powder'}[style] || 'uniwersalnej';
+                const levelText = {beginner: 'początkujących', intermediate: 'średniozaawansowanych', advanced: 'zaawansowanych', expert: 'ekspertów'}[level] || 'wszystkich';
+                const flexText = flex <= 3 ? 'Miękka' : flex <= 5 ? 'Średnia' : flex <= 7 ? 'Średnio-twarda' : 'Twarda';
                 adviceHTML = `
-                    <div class="result-advice-item">
-                        <span>✅</span>
-                        <span>Deska ${styleText}</span>
-                    </div>
-                    <div class="result-advice-item">
-                        <span>✅</span>
-                        <span>Dla ${levelText}</span>
-                    </div>
-                    <div class="result-advice-item">
-                        <span>✅</span>
-                        <span>${flexText}</span>
-                    </div>
+                    <div class="result-advice-item"><span>✅</span><span>Deska ${styleText}</span></div>
+                    <div class="result-advice-item"><span>✅</span><span>Dla ${levelText}</span></div>
+                    <div class="result-advice-item"><span>✅</span><span>${flexText} twardość</span></div>
                 `;
             } else {
                 adviceHTML = `
-                    <div class="result-advice-item">
-                        <span>✅</span>
-                        <span>Deska ${length}cm (±3cm)</span>
-                    </div>
-                    <div class="result-advice-item">
-                        <span>✅</span>
-                        <span>Uniwersalna, wszechstronna</span>
-                    </div>
-                    <div class="result-advice-item">
-                        <span>💡</span>
-                        <span><a href="#" onclick="restart(); return false;" style="color: #00D9FF;">Uzupełnij dane</a> dla dokładniejszej rekomendacji</span>
-                    </div>
+                    <div class="result-advice-item"><span>✅</span><span>Deska ${length}cm (±3cm)</span></div>
+                    <div class="result-advice-item"><span>✅</span><span>Uniwersalna</span></div>
+                    <div class="result-advice-item"><span>💡</span><span><a href="#" onclick="restart(); return false;" style="color: #00D9FF;">Uzupełnij dane</a> dla dokładniejszej rekomendacji</span></div>
                 `;
             }
             document.getElementById('advice-list').innerHTML = adviceHTML;
 
-            // Seller Text
             let sellerText = '';
             if (isChild) {
                 sellerText = `Szukam deski dziecięcej ${rangeMin}-${rangeMax}cm, miękkiej, dla początkujących.`;
             } else if (hasFullData) {
-                const styleText = getStyleText(styles);
-                const flexText = getFlexText(flex);
-                sellerText = `Szukam deski ${styleText} ${length}cm, ${flexText.toLowerCase()}, dla ${getLevelText(level)}.`;
+                const styleText = {allmountain: 'all-mountain', freestyle: 'freestyle', freeride: 'freeride', powder: 'powder'}[style];
+                const levelText = {beginner: 'początkujących', intermediate: 'średniozaawansowanych', advanced: 'zaawansowanych', expert: 'ekspertów'}[level];
+                const flexText = flex <= 3 ? 'miękką' : flex <= 5 ? 'średnią' : flex <= 7 ? 'średnio-twardą' : 'twardą';
+                sellerText = `Szukam deski ${styleText} ${length}cm, ${flexText}, dla ${levelText}.`;
             } else {
-                sellerText = `Szukam uniwersalnej deski około ${length}cm (±3cm), wszechstronnej.`;
+                sellerText = `Szukam uniwersalnej deski około ${length}cm (±3cm).`;
             }
             document.getElementById('seller-text').textContent = sellerText;
 
-            // Technical Parameters
             if (hasFullData && !isChild) {
-                document.getElementById('param-shape').textContent = getShapeText(shape);
-                document.getElementById('param-profile').textContent = getProfileText(profile);
-                document.getElementById('param-flex').textContent = `${flex}/10 - ${getFlexText(flex)}`;
+                const shapeText = shape === 'Twin' ? 'Symetryczna (Twin)' : shape === 'Directional' ? 'Kierunkowa (Directional)' : 'Uniwersalna (Directional Twin)';
+                const profileText = profile === 'Rocker' ? 'Rocker (Banana)' : profile === 'Camber' ? 'Camber (Klasyczny)' : profile === 'Flat' ? 'Flat (Płaski)' : 'Hybrid (Mieszany)';
+                const flexName = flex <= 3 ? 'Miękki' : flex <= 5 ? 'Średni' : flex <= 7 ? 'Średnio-twardy' : 'Twardy';
+                
+                document.getElementById('param-shape').textContent = shapeText;
+                document.getElementById('param-profile').textContent = profileText;
+                document.getElementById('param-flex').textContent = `${flex}/10 - ${flexName}`;
                 document.getElementById('tech-toggle').style.display = 'block';
             } else {
                 document.getElementById('tech-toggle').style.display = 'none';
             }
 
-            // Show/hide logged user actions
             document.getElementById('logged-actions').style.display = state.isLoggedIn ? 'block' : 'none';
         }
 
-        function getStyleText(styles) {
-            if (!styles || styles.length === 0) return 'uniwersalnej';
-            if (styles.includes('allmountain')) return 'all-mountain';
-            if (styles.includes('freestyle')) return 'freestyle';
-            if (styles.includes('freeride')) return 'freeride';
-            if (styles.includes('powder')) return 'powder';
-            return 'uniwersalnej';
-        }
-
-        function getLevelText(level) {
-            const levels = {
-                'beginner': 'początkujących',
-                'intermediate': 'średniozaawansowanych',
-                'advanced': 'zaawansowanych',
-                'expert': 'ekspertów'
-            };
-            return levels[level] || 'wszystkich';
-        }
-
-        function getFlexText(flex) {
-            if (flex <= 3) return 'Miękka twardość';
-            if (flex <= 5) return 'Średnia twardość';
-            if (flex <= 7) return 'Średnio-twarda';
-            return 'Twarda';
-        }
-
-        function getShapeText(shape) {
-            if (shape === 'Twin') return 'Symetryczna (Twin)';
-            if (shape === 'Directional') return 'Kierunkowa (Directional)';
-            if (shape === 'Directional Twin') return 'Uniwersalna (Directional Twin)';
-            return '---';
-        }
-
-        function getProfileText(profile) {
-            if (profile === 'Rocker') return 'Rocker (Banana)';
-            if (profile === 'Camber') return 'Camber (Klasyczny)';
-            if (profile === 'Flat') return 'Flat (Płaski)';
-            if (profile === 'Hybrid') return 'Hybrid (Mieszany)';
-            return '---';
-        }
-
-        // Technical Parameters Toggle
         function toggleTechParams() {
-            const techParams = document.getElementById('tech-params');
+            const tech = document.getElementById('tech-params');
             const toggle = document.getElementById('tech-toggle');
-            
-            if (techParams.classList.contains('visible')) {
-                techParams.classList.remove('visible');
-                toggle.innerHTML = '🤓 Pokaż parametry techniczne ▼';
+            if (tech.classList.contains('visible')) {
+                tech.classList.remove('visible');
+                toggle.innerHTML = '<span>🤓 Pokaż parametry</span><span>▼</span>';
             } else {
-                techParams.classList.add('visible');
-                toggle.innerHTML = '🤓 Ukryj parametry techniczne ▲';
+                tech.classList.add('visible');
+                toggle.innerHTML = '<span>🤓 Ukryj parametry</span><span>▲</span>';
             }
         }
 
-        // Rating
         function rate(stars) {
-            const starElements = document.querySelectorAll('.star');
-            starElements.forEach((star, index) => {
-                if (index < stars) {
-                    star.classList.add('active');
-                } else {
-                    star.classList.remove('active');
-                }
+            document.querySelectorAll('.star').forEach((star, i) => {
+                star.classList.toggle('active', i < stars);
             });
-            
-            showToast(`⭐ Oceniono na ${stars}/5 gwiazdek`);
-            
-            // Save rating
-            if (state.isLoggedIn) {
-                // Save to Firebase (simulated)
-                console.log('Saving rating to Firebase:', stars);
-            } else {
-                // Save locally
-                localStorage.setItem('lastRating', stars);
-            }
+            showToast(`⭐ Oceniono na ${stars}/5`);
         }
 
-        // Copy Seller Text
         function copySellerText() {
             const text = document.getElementById('seller-text').textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('✅ Skopiowano do schowka!');
-            }).catch(() => {
-                showToast('❌ Nie udało się skopiować');
-            });
+            navigator.clipboard.writeText(text).then(() => showToast('✅ Skopiowano!')).catch(() => showToast('❌ Błąd'));
         }
 
-        // Comment & Save (for logged users)
         function showCommentBox() {
-            if (!state.isLoggedIn) {
-                showToast('⚠️ Zaloguj się aby dodać komentarz');
-                return;
-            }
-            showToast('💬 Funkcja komentarzy dostępna wkrótce!');
+            showToast('💬 Funkcja dostępna wkrótce!');
         }
 
         function saveToHistory() {
-            if (!state.isLoggedIn) {
-                showToast('⚠️ Zaloguj się aby zapisać');
-                return;
-            }
-            showToast('✅ Zapisano do historii!');
-            // Save to Firebase (simulated)
-            console.log('Saving to Firebase:', state.formData, state.results);
+            showToast('✅ Zapisano!');
         }
 
-        // Restart
         function restart() {
-            state.formData = {
-                age: null,
-                weight: null,
-                height: null,
-                level: null,
-                styles: []
-            };
+            state.formData = {age: 25, weight: 70, height: 175, level: null, style: null};
             state.results = {};
             state.screenHistory = [];
             
-            // Reset form values
             document.getElementById('age-input').value = 25;
             document.getElementById('age-slider').value = 25;
             document.getElementById('weight-input').value = 70;
@@ -1621,30 +1547,28 @@
             document.getElementById('height-input').value = 175;
             document.getElementById('height-slider').value = 175;
             
-            // Clear selections
-            document.querySelectorAll('.card').forEach(card => card.classList.remove('selected'));
-            document.querySelectorAll('.star').forEach(star => star.classList.remove('active'));
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+            
+            document.getElementById('btn-form2-next').disabled = true;
+            document.getElementById('btn-form3-next').disabled = true;
+            validateForm1();
             
             showScreen('form1');
         }
 
-        // Toast Notification
-        function showToast(message) {
+        function showToast(msg) {
             const toast = document.getElementById('toast');
-            toast.textContent = message;
+            toast.textContent = msg;
             toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2000);
+            setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
-        // Close modal on outside click
         document.getElementById('settingsModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeSettings();
-            }
+            if (e.target === this) closeSettings();
         });
+
+        validateForm1();
     </script>
 </body>
 </html>
