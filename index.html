@@ -2,636 +2,564 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🦆 DuckOnBoard - Find Your Perfect Board</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DuckOnBoard - Find Your Perfect Gear</title>
     <style>
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
             background: #0A0A0A;
             color: #FFFFFF;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 20px;
-            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* THEME SYSTEM */
-        body.theme-standard-dark {
-            background: #0A0A0A;
-        }
-
-        body.theme-standard-dark .app-container {
-            background: #0A0A0A;
-            color: #FFFFFF;
-        }
-
-        body.theme-standard-light {
-            background: #F5F5F5;
-        }
-
-        body.theme-standard-light .app-container {
-            background: #FFFFFF;
-            color: #0A0A0A;
-        }
-
-        body.theme-pride {
-            background: linear-gradient(135deg, #FF0080 0%, #FF8C00 25%, #FFED00 50%, #00FF00 75%, #0080FF 100%);
-        }
-
-        body.theme-pride .app-container {
-            background: #1A1A1A;
-            color: #FFFFFF;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-
+        /* ===== APP CONTAINER ===== */
         .app-container {
-            width: 100%;
-            max-width: 420px;
+            max-width: 600px;
+            margin: 0 auto;
+            min-height: 100vh;
             background: #0A0A0A;
-            border-radius: 40px;
-            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.3);
-            overflow: visible;
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* CRITICAL FIX: Mobile scroll */
+        /* ===== SCREENS ===== */
         .screen {
             display: none;
-            min-height: auto;
-            height: auto;
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 80px;
             overflow-y: auto;
-            padding-bottom: 60px;
+            width: 100%;
         }
 
         .screen.active {
-            display: block;
-        }
-
-        .header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #1A1A1A;
-            position: sticky;
-            top: 0;
-            background: #0A0A0A;
-            z-index: 10;
-        }
-
-        body.theme-standard-light .header {
-            border-bottom-color: #E0E0E0;
-            background: #FFFFFF;
-        }
-
-        body.theme-pride .header {
-            background: #1A1A1A;
-        }
-
-        .header-nav {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+            flex-direction: column;
         }
 
-        .btn-back {
+        /* ===== HEADER ===== */
+        .screen-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-button {
             background: none;
             border: none;
             color: #00D9FF;
             font-size: 24px;
             cursor: pointer;
-            padding: 5px;
+            padding: 8px;
+            transition: transform 0.2s;
         }
 
-        .progress-indicator {
-            color: #666;
-            font-size: 14px;
+        .back-button:hover {
+            transform: translateX(-4px);
+        }
+
+        .screen-title {
+            font-size: 20px;
             font-weight: 600;
+            flex: 1;
+            text-align: center;
         }
 
-        .header-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #FFFFFF;
+        .screen-step {
+            font-size: 14px;
+            color: #999;
         }
 
-        body.theme-standard-light .header-title {
-            color: #0A0A0A;
-        }
-
+        /* ===== LOGO ===== */
         .logo-container {
             text-align: center;
-            padding: 40px 20px 20px;
+            margin: 40px 0;
         }
 
         .logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 10px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            font-size: 64px;
+            margin-bottom: 12px;
         }
 
         .app-name {
-            font-size: 36px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #00D9FF 0%, #00B8D4 100%);
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00D9FF, #0099CC);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 5px;
-        }
-
-        .tagline {
-            font-size: 16px;
-            color: #B0B0B0;
-            font-weight: 300;
-        }
-
-        .content {
-            padding: 20px;
-            padding-bottom: 80px;
-        }
-
-        /* AdMob Banner */
-        .admob-banner {
-            height: 50px;
-            background: #1A1A1A;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-size: 12px;
-            border: 1px dashed #333;
-            margin-bottom: 20px;
-        }
-
-        body.theme-standard-light .admob-banner {
-            background: #F0F0F0;
-            border-color: #CCC;
-        }
-
-        .admob-banner.hidden {
-            display: none;
-        }
-
-        /* BUTTON FIXES */
-        .btn {
-            width: 100%;
-            padding: 16px;
-            border-radius: 16px;
-            border: none;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 12px;
-            position: relative;
-        }
-
-        /* CRITICAL FIX: Całe pole przycisku klika */
-        .btn * {
-            pointer-events: none;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #00D9FF 0%, #00B8D4 100%);
-            color: #0A0A0A;
-            box-shadow: 0 8px 24px rgba(0, 217, 255, 0.4);
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(0, 217, 255, 0.5);
-        }
-
-        /* CRITICAL FIX: Disabled button styling */
-        .btn-primary:disabled {
-            background: #333333;
-            color: #666666;
-            opacity: 0.6;
-            cursor: not-allowed;
-            box-shadow: none;
-            pointer-events: all;
-        }
-
-        /* Pride theme buttons */
-        body.theme-pride .btn-primary:not(:disabled) {
-            background: linear-gradient(135deg, #FF0080 0%, #FF8C00 25%, #FFED00 50%, #00FF00 75%, #0080FF 100%);
-            color: #FFFFFF;
-        }
-
-        .btn-secondary {
-            background: #1A1A1A;
-            color: #FFFFFF;
-            border: 2px solid #333;
-        }
-
-        body.theme-standard-light .btn-secondary {
-            background: #F5F5F5;
-            color: #0A0A0A;
-            border-color: #CCC;
-        }
-
-        .btn-secondary:hover {
-            border-color: #00D9FF;
-            background: #222;
-        }
-
-        body.theme-standard-light .btn-secondary:hover {
-            background: #E8E8E8;
-        }
-
-        /* CRITICAL FIX: Bigger skip button */
-        .btn-skip {
-            background: none;
-            border: none;
-            color: #999;
-            font-size: 14px;
-            cursor: pointer;
-            padding: 12px 20px;
-            margin-bottom: 10px;
-            opacity: 0.7;
-            transition: opacity 0.3s;
-            width: 100%;
-        }
-
-        /* FIX: Skip button clickable */
-        .btn-skip * {
-            pointer-events: none;
-        }
-
-        .btn-skip:hover {
-            opacity: 1;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin: 20px 0;
-        }
-
-        .divider-line {
-            flex: 1;
-            height: 1px;
-            background: #333;
-        }
-
-        body.theme-standard-light .divider-line {
-            background: #CCC;
-        }
-
-        .divider-text {
-            color: #666;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .benefits {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .benefits-title {
-            font-size: 14px;
-            color: #B0B0B0;
-            margin-bottom: 12px;
-        }
-
-        .benefit-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 14px;
-            color: #00D9FF;
             margin-bottom: 8px;
         }
 
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 30px;
+        .app-tagline {
+            font-size: 16px;
+            color: #999;
+            font-weight: 400;
+        }
+
+        /* ===== CATEGORIES GRID ===== */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .category-card {
+            aspect-ratio: 1;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 20px;
+            border: 2px solid transparent;
+        }
+
+        .category-card.active {
+            opacity: 1;
+        }
+
+        .category-card.active:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(0, 217, 255, 0.3);
+        }
+
+        .category-card.inactive {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .category-icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+
+        .category-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .category-badge {
+            font-size: 11px;
+            background: rgba(255, 165, 0, 0.9);
+            padding: 4px 12px;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Category-specific gradients */
+        .category-snowboard {
+            background: linear-gradient(135deg, #00D9FF 0%, #0099CC 100%);
+        }
+
+        .category-ski {
+            background: linear-gradient(135deg, #0099FF 0%, #0066CC 100%);
+        }
+
+        .category-kite {
+            background: linear-gradient(135deg, #FF9944 0%, #CC7722 100%);
+        }
+
+        .category-wake {
+            background: linear-gradient(135deg, #9966FF 0%, #6633CC 100%);
+        }
+
+        .category-surf {
+            background: linear-gradient(135deg, #00CCAA 0%, #009988 100%);
+        }
+
+        .category-sup {
+            background: linear-gradient(135deg, #44CC44 0%, #339933 100%);
+        }
+
+        .category-tennis {
+            background: linear-gradient(135deg, #FF6699 0%, #CC4477 100%);
+        }
+
+        .category-bike {
+            background: linear-gradient(135deg, #FF4444 0%, #CC2222 100%);
+        }
+
+        /* ===== FORM ELEMENTS ===== */
+        .form-section {
+            margin-bottom: 32px;
         }
 
         .form-label {
             display: block;
             font-size: 14px;
-            font-weight: 600;
+            color: #CCCCCC;
             margin-bottom: 12px;
-            color: #FFFFFF;
+            font-weight: 500;
         }
 
-        body.theme-standard-light .form-label {
-            color: #0A0A0A;
+        .form-hint {
+            font-size: 13px;
+            color: #999;
+            margin-top: 8px;
+            line-height: 1.4;
         }
 
-        .slider-container {
+        /* Radio buttons - Gender */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .radio-option {
             display: flex;
             align-items: center;
-            gap: 12px;
+            cursor: pointer;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
         }
 
-        .slider-input {
-            width: 80px;
-            padding: 10px;
-            border: 2px solid #333;
-            border-radius: 8px;
-            background: #1A1A1A;
-            color: #FFFFFF;
-            font-size: 16px;
-            font-weight: 600;
-            text-align: center;
+        .radio-option:hover {
+            border-color: rgba(0, 217, 255, 0.3);
         }
 
-        body.theme-standard-light .slider-input {
-            background: #F5F5F5;
-            color: #0A0A0A;
-            border-color: #CCC;
-        }
-
-        .slider {
-            flex: 1;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 6px;
-            border-radius: 3px;
-            background: #333;
-            outline: none;
-        }
-
-        body.theme-standard-light .slider {
-            background: #CCC;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
+        .radio-option input[type="radio"] {
+            margin-right: 12px;
             width: 20px;
             height: 20px;
-            border-radius: 50%;
-            background: #00D9FF;
             cursor: pointer;
         }
 
-        .slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
+        .radio-option.checked {
+            border-color: #00D9FF;
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        /* Input fields */
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #FFFFFF;
+            transition: all 0.2s;
+        }
+
+        input[type="number"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #00D9FF;
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        /* Sliders */
+        .slider-container {
+            margin-top: 16px;
+        }
+
+        .slider-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #00D9FF;
+            margin-bottom: 12px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #00D9FF;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 217, 255, 0.4);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background: #00D9FF;
             cursor: pointer;
             border: none;
         }
 
-        /* Cards - SINGLE SELECT */
-        .card {
-            background: #1A1A1A;
-            border: 2px solid #222;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
+        /* Cards (Level, Style) */
+        .cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        body.theme-standard-light .card {
-            background: #F5F5F5;
-            border-color: #E0E0E0;
+        .card {
+            padding: 20px;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.02);
         }
 
         .card:hover {
-            border-color: #00D9FF;
-            transform: translateY(-2px);
+            border-color: rgba(0, 217, 255, 0.3);
         }
 
         .card.selected {
             border-color: #00D9FF;
-            border-width: 3px;
             background: rgba(0, 217, 255, 0.1);
         }
 
         .card-icon {
             font-size: 32px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .card-title {
             font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 5px;
+            font-weight: 600;
+            margin-bottom: 4px;
         }
 
         .card-description {
             font-size: 14px;
-            color: #666;
+            color: #999;
             line-height: 1.4;
         }
 
-        .card-checkmark {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            color: #00D9FF;
-            display: none;
+        /* ===== BUTTONS ===== */
+        .button-container {
+            margin-top: auto;
+            padding-top: 24px;
         }
 
-        .card.selected .card-checkmark {
+        .btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
             display: block;
+            text-align: center;
+            pointer-events: auto;
         }
 
-        /* Results */
+        .btn-primary {
+            background: linear-gradient(135deg, #00D9FF, #0099CC);
+            color: #0A0A0A;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 217, 255, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #333;
+            color: #666;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: none;
+            color: #999;
+            font-size: 14px;
+            padding: 12px;
+            opacity: 0.7;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            color: #CCC;
+            opacity: 1;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ===== RESULTS ===== */
         .result-main {
             text-align: center;
-            padding: 30px 20px;
-            background: #1A1A1A;
+            padding: 32px 20px;
+            background: rgba(0, 217, 255, 0.05);
             border-radius: 16px;
-            margin-bottom: 20px;
-        }
-
-        body.theme-standard-light .result-main {
-            background: #F5F5F5;
+            margin-bottom: 24px;
         }
 
         .result-label {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 8px;
         }
 
         .result-value {
-            font-size: 64px;
-            font-weight: 800;
+            font-size: 48px;
+            font-weight: 700;
             color: #00D9FF;
-            line-height: 1;
-        }
-
-        .result-unit {
-            font-size: 32px;
-            color: #666;
+            margin-bottom: 8px;
         }
 
         .result-range {
             font-size: 16px;
-            color: #B0B0B0;
-            margin-top: 10px;
+            color: #CCC;
         }
 
-        .result-advice {
-            background: #1A1A1A;
+        .result-description {
+            font-size: 14px;
+            color: #999;
+            margin-top: 12px;
+        }
+
+        .result-shopping {
+            background: rgba(255, 255, 255, 0.02);
             border-radius: 16px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
-        body.theme-standard-light .result-advice {
-            background: #F5F5F5;
-        }
-
-        .result-advice h3 {
+        .result-shopping h3 {
             font-size: 16px;
-            margin-bottom: 15px;
-            color: #00D9FF;
+            margin-bottom: 12px;
+            color: #CCC;
         }
 
-        .result-advice-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 14px;
-            line-height: 1.5;
+        .result-shopping ul {
+            list-style: none;
+            padding: 0;
         }
 
-        .seller-text-box {
-            background: #0A0A0A;
-            border: 2px solid #333;
-            border-radius: 12px;
-            padding: 16px;
-            margin: 15px 0;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #FFFFFF;
+        .result-shopping li {
+            padding: 8px 0;
+            color: #FFF;
+            font-size: 15px;
         }
 
-        body.theme-standard-light .seller-text-box {
-            background: #FFFFFF;
-            color: #0A0A0A;
-            border-color: #CCC;
+        .result-shopping li:before {
+            content: "✅ ";
+            margin-right: 8px;
         }
 
-        /* Rating */
-        .rating-section {
-            text-align: center;
-            padding: 20px;
-            background: #1A1A1A;
-            border-radius: 16px;
-            margin-bottom: 20px;
-        }
-
-        body.theme-standard-light .rating-section {
-            background: #F5F5F5;
-        }
-
-        .star-rating {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .star {
-            font-size: 40px;
-            cursor: pointer;
-            transition: all 0.2s;
-            filter: grayscale(1);
-            opacity: 0.3;
-        }
-
-        .star:hover,
-        .star.active {
-            filter: grayscale(0);
-            opacity: 1;
-            transform: scale(1.1);
-        }
-
-        /* Technical params */
-        .tech-params {
-            display: none;
-            background: #1A1A1A;
+        .result-technical {
+            background: rgba(255, 255, 255, 0.02);
             border-radius: 16px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
-        body.theme-standard-light .tech-params {
-            background: #F5F5F5;
+        .result-technical h3 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: #CCC;
         }
 
-        .tech-params.visible {
-            display: block;
+        .tech-param {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .param-item {
-            padding: 15px 0;
-            border-bottom: 1px solid #222;
-        }
-
-        body.theme-standard-light .param-item {
-            border-bottom-color: #E0E0E0;
-        }
-
-        .param-item:last-child {
+        .tech-param:last-child {
             border-bottom: none;
         }
 
-        .param-label {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
+        .tech-label {
+            color: #999;
+            font-size: 14px;
         }
 
-        .param-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #FFFFFF;
+        .tech-value {
+            color: #FFF;
+            font-size: 14px;
+            font-weight: 500;
         }
 
-        body.theme-standard-light .param-value {
-            color: #0A0A0A;
+        .toggle-technical {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #00D9FF;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 16px;
         }
 
-        /* Toast */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-action {
+            padding: 16px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.02);
+            color: #FFF;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-action:hover {
+            border-color: #00D9FF;
+            background: rgba(0, 217, 255, 0.1);
+        }
+
+        /* ===== TOAST ===== */
         .toast {
             position: fixed;
-            bottom: 30px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             background: #00D9FF;
@@ -639,936 +567,970 @@
             padding: 12px 24px;
             border-radius: 8px;
             font-weight: 600;
+            z-index: 1000;
             opacity: 0;
             transition: opacity 0.3s;
-            z-index: 1000;
+            pointer-events: none;
         }
 
         .toast.show {
             opacity: 1;
         }
 
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 20px;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .footer a {
-            color: #00D9FF;
-            text-decoration: none;
-        }
-
-        /* Settings Icon */
-        .settings-icon {
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #1A1A1A;
-            border: 2px solid #333;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 40px;
+            height: 40px;
             cursor: pointer;
-            font-size: 24px;
+            font-size: 20px;
             z-index: 100;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
 
-        .settings-icon:hover {
-            border-color: #00D9FF;
-            transform: rotate(90deg);
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
-        /* Settings Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #1A1A1A;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 400px;
-            width: 90%;
-        }
-
-        body.theme-standard-light .modal-content {
-            background: #FFFFFF;
-        }
-
-        .modal-header {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #00D9FF;
-        }
-
-        .modal-section {
-            margin-bottom: 25px;
-        }
-
-        .modal-section h3 {
-            font-size: 14px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-        }
-
-        .theme-option {
-            background: #0A0A0A;
-            border: 2px solid #333;
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        body.theme-standard-light .theme-option {
+        /* ===== LIGHT THEME ===== */
+        body.theme-light {
             background: #F5F5F5;
-            border-color: #CCC;
+            color: #1A1A1A;
         }
 
-        .theme-option:hover {
-            border-color: #00D9FF;
+        body.theme-light .app-container {
+            background: #F5F5F5;
         }
 
-        .theme-option.active {
-            border-color: #00D9FF;
-            background: rgba(0, 217, 255, 0.1);
+        body.theme-light .screen-title,
+        body.theme-light .form-label,
+        body.theme-light .card-title,
+        body.theme-light .result-value,
+        body.theme-light .category-name,
+        body.theme-light .tech-value {
+            color: #1A1A1A;
         }
 
-        .theme-option .checkmark {
-            display: none;
-            color: #00D9FF;
+        body.theme-light .screen-header {
+            border-bottom-color: rgba(0, 0, 0, 0.1);
         }
 
-        .theme-option.active .checkmark {
-            display: block;
+        body.theme-light .form-hint,
+        body.theme-light .card-description,
+        body.theme-light .result-label,
+        body.theme-light .result-range,
+        body.theme-light .result-description,
+        body.theme-light .tech-label,
+        body.theme-light .screen-step {
+            color: #666;
         }
 
-        .hidden {
-            display: none !important;
+        body.theme-light input[type="number"],
+        body.theme-light input[type="text"] {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #1A1A1A;
         }
 
-        /* Responsive - CRITICAL FIX */
-        @media (max-width: 480px) {
-            .app-container {
-                border-radius: 0;
-                max-width: 100%;
-                min-height: 100vh;
+        body.theme-light input::placeholder {
+            color: #999;
+        }
+
+        body.theme-light .card {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.theme-light .result-shopping,
+        body.theme-light .result-technical {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        body.theme-light .btn-action {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #1A1A1A;
+        }
+
+        body.theme-light .radio-option {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 375px) {
+            .category-icon {
+                font-size: 48px;
             }
             
-            body {
-                padding: 0;
-                align-items: flex-start;
+            .category-name {
+                font-size: 14px;
+            }
+            
+            .categories-grid {
+                gap: 12px;
+            }
+        }
+
+        @media (min-width: 600px) {
+            .screen {
+                padding: 40px;
             }
         }
     </style>
 </head>
-<body class="theme-standard-dark">
-    <!-- Settings Icon -->
-    <div class="settings-icon" onclick="openSettings()">⚙️</div>
-
-    <!-- Settings Modal -->
-    <div class="modal" id="settingsModal">
-        <div class="modal-content">
-            <div class="modal-header">⚙️ Ustawienia</div>
-            
-            <div class="modal-section">
-                <h3>🎨 Motyw</h3>
-                <div class="theme-option active" onclick="changeTheme('standard-dark')" data-theme="standard-dark">
-                    <span>Standard Dark</span>
-                    <span class="checkmark">✓</span>
-                </div>
-                <div class="theme-option" onclick="changeTheme('standard-light')" data-theme="standard-light">
-                    <span>Standard Light</span>
-                    <span class="checkmark">✓</span>
-                </div>
-                <div class="theme-option" onclick="changeTheme('pride')" data-theme="pride">
-                    <span>🌈 Pride</span>
-                    <span class="checkmark">✓</span>
-                </div>
-            </div>
-
-            <button class="btn btn-primary" onclick="closeSettings()">Zamknij</button>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div class="toast" id="toast"></div>
-
-    <!-- App Container -->
+<body>
     <div class="app-container">
-        <!-- SCREEN 1: LAUNCH + LOGIN -->
-        <div class="screen active" id="screen-launch">
+        <!-- Theme Toggle -->
+        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast"></div>
+
+        <!-- SCREEN 1: WELCOME + LOGIN -->
+        <div class="screen active" id="screen-welcome">
             <div class="logo-container">
-                <div class="logo">
-                    <img id="mainLogo" src="logo-standard.png" alt="DuckOnBoard Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='🦆';">
-                </div>
+                <div class="logo">🦆</div>
                 <h1 class="app-name">DuckOnBoard</h1>
-                <p class="tagline">Find Your Perfect Board</p>
+                <p class="app-tagline">Find Your Perfect Gear</p>
             </div>
-
-            <div class="content">
-                <button class="btn btn-primary" onclick="startAnonymous()">
-                    <span>⚡</span>
-                    <span>Użyj bez logowania</span>
+            
+            <div class="button-container" style="margin-top: 60px;">
+                <button class="btn btn-primary" onclick="goToScreen('categories')">
+                    Zacznij! 🎯
                 </button>
-
-                <div class="divider">
-                    <div class="divider-line"></div>
-                    <span class="divider-text">Lub zaloguj się</span>
-                    <div class="divider-line"></div>
-                </div>
-
-                <div class="benefits">
-                    <p class="benefits-title">💰 Rabaty i promocje czekają!</p>
-                    <div class="benefit-item">
-                        <span>✓</span>
-                        <span>Bez reklam na formularzach</span>
-                    </div>
-                    <div class="benefit-item">
-                        <span>✓</span>
-                        <span>Historia w chmurze</span>
-                    </div>
-                    <div class="benefit-item">
-                        <span>✓</span>
-                        <span>Powiadomienia o wyprzedażach</span>
-                    </div>
-                </div>
-
-                <button class="btn btn-secondary" onclick="loginGoogle()">
-                    <span>G</span>
-                    <span>Zaloguj przez Google</span>
+                <button class="btn btn-secondary">
+                    Zaloguj się (opcjonalnie)
                 </button>
-                <button class="btn btn-secondary" onclick="loginFacebook()">
-                    <span>f</span>
-                    <span>Zaloguj przez Facebook</span>
-                </button>
-                <button class="btn btn-secondary" onclick="loginApple()">
-                    <span>🍎</span>
-                    <span>Zaloguj przez Apple</span>
-                </button>
-                <button class="btn btn-secondary" onclick="loginEmail()">
-                    <span>📧</span>
-                    <span>Zaloguj przez Email</span>
-                </button>
-            </div>
-
-            <div class="footer">
-                <a href="#">Privacy Policy</a> · 
-                <a href="#">Terms</a> · 
-                <a href="#">Contact</a>
             </div>
         </div>
 
-        <!-- SCREEN 2: FORM 1/3 - BASIC DATA -->
+        <!-- SCREEN 2: CATEGORIES -->
+        <div class="screen" id="screen-categories">
+            <div class="logo-container" style="margin: 20px 0;">
+                <div class="logo" style="font-size: 48px;">🦆</div>
+                <h2 style="font-size: 24px; margin-bottom: 8px;">Wybierz kategorię:</h2>
+            </div>
+
+            <div class="categories-grid">
+                <!-- Row 1: ACTIVE -->
+                <div class="category-card active category-snowboard" onclick="selectCategory('snowboard')">
+                    <div class="category-icon">🏂</div>
+                    <div class="category-name">SNOWBOARD</div>
+                </div>
+                
+                <div class="category-card active category-ski" onclick="selectCategory('ski')">
+                    <div class="category-icon">⛷️</div>
+                    <div class="category-name">SKI</div>
+                </div>
+                
+                <!-- Row 2: SOON -->
+                <div class="category-card inactive category-kite" onclick="selectCategory('kite')">
+                    <div class="category-icon">🪁</div>
+                    <div class="category-name">KITE</div>
+                    <div class="category-badge">🚧 SOON</div>
+                </div>
+                
+                <div class="category-card inactive category-wake" onclick="selectCategory('wake')">
+                    <div class="category-icon">🏄</div>
+                    <div class="category-name">WAKE</div>
+                    <div class="category-badge">🚧 SOON</div>
+                </div>
+                
+                <!-- Row 3: SOON -->
+                <div class="category-card inactive category-surf" onclick="selectCategory('surf')">
+                    <div class="category-icon">🏄</div>
+                    <div class="category-name">SURF</div>
+                    <div class="category-badge">🚧 SOON</div>
+                </div>
+                
+                <div class="category-card inactive category-sup" onclick="selectCategory('sup')">
+                    <div class="category-icon">🏄</div>
+                    <div class="category-name">SUP</div>
+                    <div class="category-badge">🚧 SOON</div>
+                </div>
+                
+                <!-- Row 4: SOON -->
+                <div class="category-card inactive category-tennis" onclick="selectCategory('tennis')">
+                    <div class="category-icon">🎾</div>
+                    <div class="category-name">TENNIS</div>
+                    <div class="category-badge">🚧 SOON</div>
+                </div>
+                
+                <div class="category-card inactive category-bike" onclick="selectCategory('bike')">
+                    <div class="category-icon">🚴</div>
+                    <div class="category-name">BIKE</div>
+                    <div class="category-badge">🚧 SOON</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: FORM 1/3 - BASIC DATA -->
         <div class="screen" id="screen-form1">
-            <div class="header">
-                <div class="header-nav">
-                    <button class="btn-back" onclick="goBack()">←</button>
-                    <span class="progress-indicator">[1/3]</span>
-                    <div style="width:30px"></div>
-                </div>
-                <h2 class="header-title">O Tobie</h2>
+            <div class="screen-header">
+                <button class="back-button" onclick="goBack()">←</button>
+                <div class="screen-title">O Tobie</div>
+                <div class="screen-step">[1/3]</div>
             </div>
 
-            <div class="content">
-                <div class="admob-banner" id="banner-form1">
-                    📢 AdMob Banner 300x50
+            <!-- Gender (OPTIONAL) -->
+            <div class="form-section">
+                <label class="form-label">Kim jesteś? (opcjonalnie)</label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="gender" value="female" onchange="updateRadioStyle()">
+                        <span>Kobieta</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="gender" value="male" onchange="updateRadioStyle()">
+                        <span>Mężczyzna</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="gender" value="other" onchange="updateRadioStyle()">
+                        <span>Inne / Wolę nie podawać</span>
+                    </label>
                 </div>
+                <p class="form-hint">💡 Pomaga dokładniej dobrać długość<br>Kobiety: -20 cm, Mężczyźni: -15 cm<br>Brak wyboru: używamy średniej</p>
+            </div>
 
-                <div class="form-group">
-                    <label class="form-label">Twój wiek:</label>
-                    <div class="slider-container">
-                        <input type="number" class="slider-input" id="age-input" value="25" min="3" max="99" onchange="updateSlider('age'); validateForm1()">
-                        <input type="range" class="slider" id="age-slider" min="3" max="99" value="25" oninput="updateInput('age'); validateForm1()">
-                        <span>lat</span>
-                    </div>
+            <!-- Weight -->
+            <div class="form-section">
+                <label class="form-label">Twoja waga (kg):</label>
+                <div class="slider-container">
+                    <div class="slider-value" id="weight-value">60 kg</div>
+                    <input type="range" id="weight" min="15" max="200" value="60" 
+                           oninput="updateSlider('weight', 'kg')" onchange="validateForm1()">
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="form-label">Twoja waga:</label>
-                    <div class="slider-container">
-                        <input type="number" class="slider-input" id="weight-input" value="70" min="20" max="150" onchange="updateSlider('weight'); validateForm1()">
-                        <input type="range" class="slider" id="weight-slider" min="20" max="150" value="70" oninput="updateInput('weight'); validateForm1()">
-                        <span>kg</span>
-                    </div>
+            <!-- Height -->
+            <div class="form-section">
+                <label class="form-label">Twój wzrost (cm):</label>
+                <div class="slider-container">
+                    <div class="slider-value" id="height-value">170 cm</div>
+                    <input type="range" id="height" min="80" max="230" value="170" 
+                           oninput="updateSlider('height', 'cm')" onchange="validateForm1()">
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <label class="form-label">Twój wzrost:</label>
-                    <div class="slider-container">
-                        <input type="number" class="slider-input" id="height-input" value="175" min="100" max="220" onchange="updateSlider('height'); validateForm1()">
-                        <input type="range" class="slider" id="height-slider" min="100" max="220" value="175" oninput="updateInput('height'); validateForm1()">
-                        <span>cm</span>
-                    </div>
+            <!-- Age -->
+            <div class="form-section">
+                <label class="form-label">Twój wiek:</label>
+                <div class="slider-container">
+                    <div class="slider-value" id="age-value">25 lat</div>
+                    <input type="range" id="age" min="3" max="99" value="25" 
+                           oninput="updateSlider('age', 'lat')" onchange="validateForm1()">
                 </div>
+            </div>
 
-                <button class="btn-skip" onclick="skipStep('form1')">Pomiń</button>
-                <button class="btn btn-primary" id="btn-form1-next" onclick="nextScreen('form2')">
-                    <span>Dalej</span>
-                    <span>→</span>
-                </button>
+            <div class="button-container">
+                <button class="btn btn-secondary" id="btn-skip-1" disabled onclick="skipToResults()">POMIŃ</button>
+                <button class="btn btn-primary" id="btn-next-1" onclick="goToScreen('form2')">DALEJ →</button>
             </div>
         </div>
 
-        <!-- SCREEN 3: FORM 2/3 - LEVEL (SINGLE SELECT) -->
+        <!-- SCREEN 4: FORM 2/3 - LEVEL -->
         <div class="screen" id="screen-form2">
-            <div class="header">
-                <div class="header-nav">
-                    <button class="btn-back" onclick="goBack()">←</button>
-                    <span class="progress-indicator">[2/3]</span>
-                    <div style="width:30px"></div>
-                </div>
-                <h2 class="header-title">Poziom jazdy</h2>
+            <div class="screen-header">
+                <button class="back-button" onclick="goBack()">←</button>
+                <div class="screen-title">Poziom jazdy</div>
+                <div class="screen-step">[2/3]</div>
             </div>
 
-            <div class="content">
-                <div class="admob-banner" id="banner-form2">
-                    📢 AdMob Banner 300x50
-                </div>
-
-                <div class="form-label" style="margin-bottom: 20px;">Jaki jest Twój poziom?</div>
-
-                <div class="card" onclick="selectLevel('beginner')">
-                    <span class="card-checkmark">✓</span>
-                    <div class="card-icon">🌱</div>
-                    <div class="card-title">POCZĄTKUJĄCY</div>
-                    <div class="card-description">0-10 dni</div>
-                </div>
-
-                <div class="card" onclick="selectLevel('intermediate')">
-                    <span class="card-checkmark">✓</span>
-                    <div class="card-icon">🎿</div>
-                    <div class="card-title">ŚREDNIOZAAWANSOWANY</div>
-                    <div class="card-description">10-30 dni</div>
-                </div>
-
-                <div class="card" onclick="selectLevel('advanced')">
-                    <span class="card-checkmark">✓</span>
-                    <div class="card-icon">⚡</div>
-                    <div class="card-title">ZAAWANSOWANY</div>
-                    <div class="card-description">30+ dni</div>
-                </div>
-
-                <div class="card" onclick="selectLevel('expert')">
-                    <span class="card-checkmark">✓</span>
-                    <div class="card-icon">🔥</div>
-                    <div class="card-title">EKSPERT</div>
-                    <div class="card-description">Pro rider</div>
-                </div>
-
-                <button class="btn-skip" onclick="skipStep('form2')">Pomiń</button>
-                <button class="btn btn-primary" id="btn-form2-next" disabled onclick="nextScreen('form3')">
-                    <span>Dalej</span>
-                    <span>→</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- SCREEN 4: FORM 3/3 - STYLE (SINGLE SELECT!) -->
-        <div class="screen" id="screen-form3">
-            <div class="header">
-                <div class="header-nav">
-                    <button class="btn-back" onclick="goBack()">←</button>
-                    <span class="progress-indicator">[3/3]</span>
-                    <div style="width:30px"></div>
-                </div>
-                <h2 class="header-title">Styl jazdy</h2>
-            </div>
-
-            <div class="content">
-                <div class="admob-banner" id="banner-form3">
-                    📢 AdMob Banner 300x50
-                </div>
-
-                <div class="form-label" style="margin-bottom: 20px;">Styl jazdy</div>
-
-                <div class="card" onclick="selectStyle('allmountain')">
-                    <span class="card-checkmark">✓</span>
-                    <div class="card-icon">🏔️</div>
-                    <div class="card-title">ALL-MOUNTAIN</div>
-                    <div class="card-description">Wszędzie - stok, park, czasem poza</div>
-                </div>
-
-                <div class="card" onclick="selectStyle('freestyle')">
-                    <span class="card-checkmark">✓</span>
-                    <div class="card-icon">🎪</div>
-                    <div class="card-title">FREESTYLE</div>
-                    <div class="card-description">Skoki, trick'i, park</div>
-                </div>
-
-                <div class="card" onclick="selectStyle('freeride')">
-                    <span class="card-checkmark">✓</span>
-                    <div class="card-icon">⛰️</div>
-                    <div class="card-title">FREERIDE</div>
-                    <div class="card-description">Zjazdy poza przygotowanymi trasami</div>
-                </div>
-
-                <div class="card" onclick="selectStyle('powder')">
-                    <span class="card-checkmark">✓</span>
-                    <div class="card-icon">☁️</div>
-                    <div class="card-title">POWDER (PUDER)</div>
-                    <div class="card-description">Głęboki, świeży śnieg</div>
-                </div>
-
-                <button class="btn-skip" onclick="skipStep('form3')">Pomiń</button>
-                <button class="btn btn-primary" id="btn-form3-next" disabled onclick="showResults()">
-                    <span>Pokaż wyniki</span>
-                    <span>🎯</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- SCREEN 5: RESULTS -->
-        <div class="screen" id="screen-results">
-            <div class="header">
-                <div class="header-nav">
-                    <button class="btn-back" onclick="goBack()">←</button>
-                    <div style="width:30px"></div>
-                    <div style="width:30px"></div>
-                </div>
-                <h2 class="header-title">🎯 Co kupić?</h2>
-            </div>
-
-            <div class="content">
-                <!-- Banner for EVERYONE -->
-                <div class="admob-banner">
-                    📢 AdMob Banner 300x50
-                </div>
-
-                <!-- Main Result -->
-                <div class="result-main">
-                    <div class="result-label">📏 DŁUGOŚĆ DESKI</div>
-                    <div class="result-value">
-                        <span id="result-length">156</span><span class="result-unit">cm</span>
+            <div class="form-section">
+                <label class="form-label">Jaki jest Twój poziom?</label>
+                <div class="cards-container">
+                    <div class="card" onclick="selectLevel('beginner')">
+                        <div class="card-icon">🌱</div>
+                        <div class="card-title">POCZĄTKUJĄCY</div>
+                        <div class="card-description">0-10 dni na desce/nartach</div>
                     </div>
-                    <div class="result-range" id="result-range">Zakres: 153-159 cm</div>
-                </div>
-
-                <!-- Shopping Advice -->
-                <div class="result-advice" id="shopping-advice">
-                    <h3>💬 CZEGO SZUKAĆ W SKLEPIE:</h3>
-                    <div id="advice-list"></div>
-                </div>
-
-                <!-- Seller Text -->
-                <div class="result-advice">
-                    <h3>💡 POWIEDZ SPRZEDAWCY:</h3>
-                    <div class="seller-text-box" id="seller-text"></div>
-                    <button class="btn btn-secondary" onclick="copySellerText()">
-                        <span>📋</span>
-                        <span>Skopiuj opis</span>
-                    </button>
-                </div>
-
-                <!-- Rating -->
-                <div class="rating-section">
-                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">
-                        Oceń rekomendację
-                    </div>
-                    <div class="star-rating" id="star-rating">
-                        <span class="star" onclick="rate(1)">⭐</span>
-                        <span class="star" onclick="rate(2)">⭐</span>
-                        <span class="star" onclick="rate(3)">⭐</span>
-                        <span class="star" onclick="rate(4)">⭐</span>
-                        <span class="star" onclick="rate(5)">⭐</span>
-                    </div>
-                </div>
-
-                <!-- Comment & Save (logged users only) -->
-                <div id="logged-actions" style="display:none;">
-                    <button class="btn btn-secondary" onclick="showCommentBox()">
-                        <span>💬</span>
-                        <span>Dodaj komentarz</span>
-                    </button>
-                    <button class="btn btn-secondary" onclick="saveToHistory()">
-                        <span>📝</span>
-                        <span>Zapisz do historii</span>
-                    </button>
-                </div>
-
-                <!-- Technical Parameters (expandable) -->
-                <button class="btn btn-secondary" id="tech-toggle" onclick="toggleTechParams()" style="display:none;">
-                    <span>🤓 Pokaż parametry techniczne</span>
-                    <span>▼</span>
-                </button>
-
-                <div class="tech-params" id="tech-params">
-                    <h3 style="font-size: 18px; margin-bottom: 20px; color: #00D9FF;">
-                        🤓 Parametry techniczne
-                    </h3>
                     
-                    <div class="param-item">
-                        <div class="param-label">📐 KSZTAŁT (Shape)</div>
-                        <div class="param-value" id="param-shape">---</div>
+                    <div class="card" onclick="selectLevel('intermediate')">
+                        <div class="card-icon">🎿</div>
+                        <div class="card-title">ŚREDNIOZAAWANSOWANY</div>
+                        <div class="card-description">10-30 dni, jeździsz pewnie</div>
                     </div>
-
-                    <div class="param-item">
-                        <div class="param-label">🏔️ PROFIL</div>
-                        <div class="param-value" id="param-profile">---</div>
+                    
+                    <div class="card" onclick="selectLevel('advanced')">
+                        <div class="card-icon">⚡</div>
+                        <div class="card-title">ZAAWANSOWANY</div>
+                        <div class="card-description">30+ dni, różne warunki</div>
                     </div>
-
-                    <div class="param-item">
-                        <div class="param-label">💪 TWARDOŚĆ (Flex)</div>
-                        <div class="param-value" id="param-flex">---</div>
+                    
+                    <div class="card" onclick="selectLevel('expert')">
+                        <div class="card-icon">🔥</div>
+                        <div class="card-title">EKSPERT</div>
+                        <div class="card-description">Profesjonalista, instruktor</div>
                     </div>
-
-                    <button class="btn btn-secondary" onclick="toggleTechParams()">
-                        <span>Zwiń</span>
-                        <span>▲</span>
-                    </button>
                 </div>
+            </div>
 
-                <!-- Restart -->
-                <button class="btn btn-primary" onclick="restart()" style="margin-top: 20px;">
-                    <span>🔄</span>
-                    <span>Nowa rekomendacja</span>
+            <div class="button-container">
+                <button class="btn btn-secondary" onclick="skipToResults()">POMIŃ</button>
+                <button class="btn btn-primary" id="btn-next-2" disabled onclick="goToScreen('form3')">DALEJ →</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 5: FORM 3/3 - STYLE -->
+        <div class="screen" id="screen-form3">
+            <div class="screen-header">
+                <button class="back-button" onclick="goBack()">←</button>
+                <div class="screen-title">Styl jazdy</div>
+                <div class="screen-step">[3/3]</div>
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">Jakiego rodzaju jazdę preferujesz?</label>
+                <div class="cards-container" id="style-cards">
+                    <!-- Will be populated based on category -->
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button class="btn btn-secondary" onclick="skipToResults()">POMIŃ</button>
+                <button class="btn btn-primary" id="btn-next-3" disabled onclick="calculateResults()">POKAŻ WYNIKI 🎯</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 6: RESULTS -->
+        <div class="screen" id="screen-results">
+            <div class="screen-header">
+                <button class="back-button" onclick="goToScreen('categories')">←</button>
+                <div class="screen-title" id="results-title">TWOJA IDEALNA DESKA</div>
+            </div>
+
+            <!-- Main Result -->
+            <div class="result-main">
+                <div class="result-label">📏 DŁUGOŚĆ</div>
+                <div class="result-value" id="result-length">156 cm</div>
+                <div class="result-range" id="result-range">(zakres: 153-159 cm)</div>
+                <div class="result-description" id="result-description">4 cm krótsze od wzrostu</div>
+            </div>
+
+            <!-- Shopping Advice -->
+            <div class="result-shopping">
+                <h3>💬 CZEGO SZUKAĆ W SKLEPIE:</h3>
+                <ul id="shopping-advice">
+                    <li>Deska all-mountain</li>
+                    <li>Dla średniozaawansowanych</li>
+                    <li>Średnia twardość (medium)</li>
+                </ul>
+            </div>
+
+            <!-- Technical Parameters (collapsible) -->
+            <button class="toggle-technical" id="toggle-tech" onclick="toggleTechnical()">
+                🔽 Pokaż parametry techniczne
+            </button>
+            
+            <div class="result-technical" id="technical-params" style="display: none;">
+                <h3>📋 PARAMETRY TECHNICZNE:</h3>
+                <div class="tech-param">
+                    <span class="tech-label">Typ:</span>
+                    <span class="tech-value" id="tech-type">All-Mountain</span>
+                </div>
+                <div class="tech-param">
+                    <span class="tech-label">Flex:</span>
+                    <span class="tech-value" id="tech-flex">Medium (5/10)</span>
+                </div>
+                <div class="tech-param">
+                    <span class="tech-label">Profil:</span>
+                    <span class="tech-value" id="tech-profile">Hybrid</span>
+                </div>
+                <div class="tech-param">
+                    <span class="tech-label">Shape:</span>
+                    <span class="tech-value" id="tech-shape">Directional Twin</span>
+                </div>
+            </div>
+
+            <!-- Hint if no gender selected -->
+            <div id="gender-hint" style="display: none; padding: 16px; background: rgba(255, 165, 0, 0.1); border-radius: 12px; margin: 16px 0;">
+                <p style="font-size: 14px; color: #FFA500;">💡 Wskazówka: Wynik obliczony na podstawie średniej. Podanie płci może dać dokładniejszy wynik!</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn-action" onclick="goToScreen('form1')">
+                    ✏️ Edytuj moje dane
+                </button>
+                <button class="btn-action" onclick="startOver()">
+                    🔄 Zacznij od początku
+                </button>
+                <button class="btn-action">
+                    🛒 Kupić sprzęt
+                </button>
+                <button class="btn-action">
+                    🎿 Wynająć sprzęt
+                </button>
+                <button class="btn-action">
+                    🎓 Znaleźć instruktora
+                </button>
+                <button class="btn-action" onclick="goToScreen('din-form')">
+                    ⚙️ Oblicz DIN
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 7: DIN FORM (OPTIONAL) -->
+        <div class="screen" id="screen-din-form">
+            <div class="screen-header">
+                <button class="back-button" onclick="goToScreen('results')">←</button>
+                <div class="screen-title">Ustawienie wiązań (DIN)</div>
+            </div>
+
+            <div style="padding: 16px; background: rgba(255, 165, 0, 0.1); border-radius: 12px; margin-bottom: 24px;">
+                <p style="font-size: 14px; line-height: 1.5;">DIN to ustawienie siły wypięcia wiązań narciarskich.</p>
+            </div>
+
+            <!-- Boot Size -->
+            <div class="form-section">
+                <label class="form-label">Rozmiar buta (Mondo):</label>
+                <input type="number" id="boot-size" placeholder="np. 27" step="0.5" min="20" max="35">
+                <p class="form-hint">💡 Mondo ≈ EU minus 7 (EU 42 ≈ Mondo 27)</p>
+            </div>
+
+            <!-- Skier Type -->
+            <div class="form-section">
+                <label class="form-label">Typ narciarza:</label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="skier-type" value="cautious" onchange="updateRadioStyle()">
+                        <span>Ostrożny (wolę bezpieczeństwo)</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="skier-type" value="average" onchange="updateRadioStyle()">
+                        <span>Przeciętny (normalny styl)</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="skier-type" value="aggressive" onchange="updateRadioStyle()">
+                        <span>Agresywny (szybko, ostro)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div style="padding: 16px; background: rgba(255, 0, 0, 0.1); border-radius: 12px; margin: 24px 0;">
+                <p style="font-size: 13px; line-height: 1.5; color: #FF6666;">⚠️ WAŻNE: To TYLKO orientacyjna wartość! Finalne ustawienie robi SERWIS w sklepie narciarskim.</p>
+            </div>
+
+            <div class="button-container">
+                <button class="btn btn-secondary" onclick="goToScreen('results')">Anuluj</button>
+                <button class="btn btn-primary" onclick="calculateDIN()">OBLICZ DIN →</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 8: DIN RESULTS -->
+        <div class="screen" id="screen-din-results">
+            <div class="screen-header">
+                <button class="back-button" onclick="goToScreen('results')">←</button>
+                <div class="screen-title">⚙️ USTAWIENIE WIĄZAŃ</div>
+            </div>
+
+            <div class="result-main">
+                <div class="result-label">🎯 ZALECANE DIN:</div>
+                <div class="result-value" id="din-value">6.5</div>
+                <div class="result-range" id="din-range">(zakres: 6.0 - 7.0)</div>
+            </div>
+
+            <div class="result-shopping">
+                <h3>Na podstawie:</h3>
+                <ul id="din-basis">
+                    <li>Waga: 75 kg</li>
+                    <li>Rozmiar buta: 27 Mondo</li>
+                    <li>Typ: Przeciętny</li>
+                    <li>Wiek: 35 lat</li>
+                </ul>
+            </div>
+
+            <div style="padding: 20px; background: rgba(255, 0, 0, 0.1); border-radius: 12px; margin: 24px 0;">
+                <h3 style="font-size: 16px; margin-bottom: 12px; color: #FF6666;">⚠️ BARDZO WAŻNE:</h3>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    To TYLKO orientacyjna wartość do rozmowy z serwisem!<br><br>
+                    Finalne ustawienie DIN MUSI wykonać certyfikowany SERWIS w sklepie narciarskim podczas montażu wiązań.<br><br>
+                    Nieprawidłowe DIN = ryzyko poważnej kontuzji kolana!<br><br>
+                    <strong>Nie próbuj ustawiać samodzielnie!</strong>
+                </p>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-action" onclick="copyDIN()">
+                    📋 Skopiuj DIN
+                </button>
+                <button class="btn-action" onclick="goToScreen('results')">
+                    ← Wróć do wyników
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        // Global State
-        let state = {
-            isLoggedIn: false,
-            currentScreen: 'launch',
-            screenHistory: [],
-            formData: {
-                age: 25,
-                weight: 70,
-                height: 175,
-                level: null,
-                style: null  // SINGLE value!
-            },
-            results: {}
+        // ===== STATE =====
+        const state = {
+            category: null,
+            gender: null,
+            weight: 60,
+            height: 170,
+            age: 25,
+            level: null,
+            style: null,
+            screenHistory: []
         };
 
-        // Theme Management
-        function changeTheme(theme) {
-            document.body.className = `theme-${theme}`;
-            document.querySelectorAll('.theme-option').forEach(opt => {
-                opt.classList.remove('active');
-                if (opt.dataset.theme === theme) {
-                    opt.classList.add('active');
-                }
-            });
+        // ===== NAVIGATION =====
+        function goToScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             
-            // Update logo
-            const logo = document.getElementById('mainLogo');
-            if (logo) {
-                if (theme === 'pride') {
-                    logo.src = 'logo-pride.png';
-                } else {
-                    logo.src = 'logo-standard.png';
-                }
+            // Show target screen
+            document.getElementById('screen-' + screenId).classList.add('active');
+            
+            // Save history
+            const currentScreen = document.querySelector('.screen.active');
+            if (currentScreen) {
+                state.screenHistory.push(currentScreen.id);
             }
             
-            localStorage.setItem('theme', theme);
-        }
-
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'standard-dark';
-        changeTheme(savedTheme);
-
-        // Settings
-        function openSettings() {
-            document.getElementById('settingsModal').classList.add('active');
-        }
-
-        function closeSettings() {
-            document.getElementById('settingsModal').classList.remove('active');
-        }
-
-        // Navigation
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(`screen-${screenId}`).classList.add('active');
+            // CRITICAL: Scroll to top
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
             
-            state.screenHistory.push(state.currentScreen);
-            state.currentScreen = screenId;
-
-            updateAdsVisibility();
+            const appContainer = document.querySelector('.app-container');
+            if (appContainer) {
+                appContainer.scrollTop = 0;
+            }
         }
 
         function goBack() {
-            if (state.screenHistory.length > 0) {
-                const previousScreen = state.screenHistory.pop();
-                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-                document.getElementById(`screen-${previousScreen}`).classList.add('active');
-                state.currentScreen = previousScreen;
-                updateAdsVisibility();
+            const history = state.screenHistory;
+            if (history.length > 1) {
+                history.pop(); // Remove current
+                const prevScreenId = history[history.length - 1].replace('screen-', '');
+                goToScreen(prevScreenId);
             }
         }
 
-        function nextScreen(screenId) {
-            showScreen(screenId);
-        }
-
-        function updateAdsVisibility() {
-            document.querySelectorAll('.admob-banner').forEach(b => b.classList.add('hidden'));
-
-            if (!state.isLoggedIn) {
-                if (state.currentScreen === 'form1') document.getElementById('banner-form1').classList.remove('hidden');
-                if (state.currentScreen === 'form2') document.getElementById('banner-form2').classList.remove('hidden');
-                if (state.currentScreen === 'form3') document.getElementById('banner-form3').classList.remove('hidden');
-            }
-
-            // Results - always show
-            if (state.currentScreen === 'results') {
-                document.querySelectorAll('#screen-results .admob-banner').forEach(b => b.classList.remove('hidden'));
-            }
-        }
-
-        // Login
-        function startAnonymous() {
-            state.isLoggedIn = false;
-            showToast('✅ Rozpoczęto bez logowania');
-            showScreen('form1');
-        }
-
-        function loginGoogle() {
-            state.isLoggedIn = true;
-            showToast('✅ Zalogowano przez Google');
-            showScreen('form1');
-        }
-
-        function loginFacebook() {
-            state.isLoggedIn = true;
-            showToast('✅ Zalogowano przez Facebook');
-            showScreen('form1');
-        }
-
-        function loginApple() {
-            state.isLoggedIn = true;
-            showToast('✅ Zalogowano przez Apple');
-            showScreen('form1');
-        }
-
-        function loginEmail() {
-            state.isLoggedIn = true;
-            showToast('✅ Zalogowano przez Email');
-            showScreen('form1');
-        }
-
-        // Form Input
-        function updateInput(field) {
-            const slider = document.getElementById(`${field}-slider`);
-            const input = document.getElementById(`${field}-input`);
-            input.value = slider.value;
-            state.formData[field] = parseInt(slider.value);
-        }
-
-        function updateSlider(field) {
-            const slider = document.getElementById(`${field}-slider`);
-            const input = document.getElementById(`${field}-input`);
-            slider.value = input.value;
-            state.formData[field] = parseInt(input.value);
-        }
-
-        // Validation
-        function validateForm1() {
-            const btn = document.getElementById('btn-form1-next');
-            const age = parseInt(document.getElementById('age-input').value);
-            const weight = parseInt(document.getElementById('weight-input').value);
-            const height = parseInt(document.getElementById('height-input').value);
+        function startOver() {
+            // Clear state
+            state.category = null;
+            state.level = null;
+            state.style = null;
+            state.screenHistory = [];
             
-            if (age >= 3 && age <= 99 && weight >= 20 && weight <= 150 && height >= 100 && height <= 220) {
-                btn.disabled = false;
-            } else {
-                btn.disabled = true;
-            }
-        }
-
-        // Skip
-        function skipStep(step) {
-            if (step === 'form1') {
-                state.formData.age = null;
-                state.formData.weight = null;
-                state.formData.height = null;
-                showToast('⏭️ Pominięto dane');
-                nextScreen('form2');
-            } else if (step === 'form2') {
-                state.formData.level = null;
-                showToast('⏭️ Pominięto poziom');
-                nextScreen('form3');
-            } else if (step === 'form3') {
-                state.formData.style = null;
-                showToast('⏭️ Pominięto styl');
-                showResults();
-            }
-        }
-
-        // SINGLE SELECT - Level
-        function selectLevel(level) {
-            document.querySelectorAll('#screen-form2 .card').forEach(card => card.classList.remove('selected'));
-            event.currentTarget.classList.add('selected');
-            state.formData.level = level;
-            document.getElementById('btn-form2-next').disabled = false;
-        }
-
-        // SINGLE SELECT - Style
-        function selectStyle(style) {
-            document.querySelectorAll('#screen-form3 .card').forEach(card => card.classList.remove('selected'));
-            event.currentTarget.classList.add('selected');
-            state.formData.style = style;
-            document.getElementById('btn-form3-next').disabled = false;
-        }
-
-        // Calculate & Display Results
-        function showResults() {
-            if (state.formData.age === null) state.formData.age = parseInt(document.getElementById('age-input').value);
-            if (state.formData.weight === null) state.formData.weight = parseInt(document.getElementById('weight-input').value);
-            if (state.formData.height === null) state.formData.height = parseInt(document.getElementById('height-input').value);
-
-            calculateRecommendation();
-            displayResults();
-            showScreen('results');
-        }
-
-        function calculateRecommendation() {
-            const { age, weight, height, level, style } = state.formData;
+            // Reset forms
+            document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
             
-            // Children
-            if (age !== null && age < 15) {
-                const lengthRange = getChildBoardLength(height);
-                state.results = {
-                    isChild: true,
-                    length: Math.round((lengthRange.min + lengthRange.max) / 2),
-                    rangeMin: lengthRange.min,
-                    rangeMax: lengthRange.max,
-                    shape: null,
-                    profile: null,
-                    flex: null
-                };
+            goToScreen('welcome');
+        }
+
+        // ===== CATEGORY SELECTION =====
+        function selectCategory(category) {
+            if (['kite', 'wake', 'surf', 'sup', 'tennis', 'bike'].includes(category)) {
+                showToast('🚧 Ta kategoria jest w trakcie budowy! Coming soon.');
                 return;
             }
+            
+            state.category = category;
+            
+            // Populate style cards based on category
+            populateStyleCards(category);
+            
+            goToScreen('form1');
+        }
 
-            // Adults
-            let baseLength = height ? height - 15 : 160;
+        function populateStyleCards(category) {
+            const container = document.getElementById('style-cards');
+            
+            const styles = {
+                snowboard: [
+                    { value: 'allmountain', icon: '🏔️', title: 'ALL-MOUNTAIN', desc: 'Wszędzie - stok, różne warunki' },
+                    { value: 'freestyle', icon: '🎪', title: 'FREESTYLE', desc: 'Skoki, trick\'i, park' },
+                    { value: 'freeride', icon: '⛰️', title: 'FREERIDE', desc: 'Poza trasą, głęboki śnieg' },
+                    { value: 'powder', icon: '❄️', title: 'POWDER', desc: 'Bardzo głęboki śnieg' }
+                ],
+                ski: [
+                    { value: 'allmountain', icon: '🏔️', title: 'ALL-MOUNTAIN', desc: 'Wszędzie - stok, różne warunki' },
+                    { value: 'freestyle', icon: '🎪', title: 'FREESTYLE', desc: 'Skoki, trick\'i, park' },
+                    { value: 'freeride', icon: '⛰️', title: 'FREERIDE', desc: 'Poza trasą, głęboki śnieg' },
+                    { value: 'carving', icon: '🏁', title: 'CARVING', desc: 'Szybkie przejazdy, slalom' },
+                    { value: 'touring', icon: '🥾', title: 'TOURING', desc: 'Skitouring, wyprawy' }
+                ]
+            };
+            
+            const categoryStyles = styles[category] || styles.snowboard;
+            
+            container.innerHTML = categoryStyles.map(s => `
+                <div class="card" onclick="selectStyle('${s.value}')">
+                    <div class="card-icon">${s.icon}</div>
+                    <div class="card-title">${s.title}</div>
+                    <div class="card-description">${s.desc}</div>
+                </div>
+            `).join('');
+        }
 
-            if (weight) {
-                if (weight < 50) baseLength -= 4;
-                else if (weight < 60) baseLength -= 2;
-                else if (weight >= 80 && weight < 90) baseLength += 2;
-                else if (weight >= 90) baseLength += 3;
+        // ===== FORM INPUTS =====
+        function updateSlider(id, unit) {
+            const value = document.getElementById(id).value;
+            document.getElementById(id + '-value').textContent = value + ' ' + unit;
+            
+            state[id] = parseFloat(value);
+            validateForm1();
+        }
+
+        function validateForm1() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const age = parseInt(document.getElementById('age').value);
+            
+            const valid = weight >= 15 && height >= 80 && age >= 3;
+            
+            document.getElementById('btn-next-1').disabled = !valid;
+            document.getElementById('btn-skip-1').disabled = !valid;
+            
+            // Save gender (optional)
+            const genderInput = document.querySelector('input[name="gender"]:checked');
+            state.gender = genderInput ? genderInput.value : null;
+        }
+
+        function updateRadioStyle() {
+            // Update radio button visual state
+            document.querySelectorAll('.radio-option').forEach(option => {
+                const radio = option.querySelector('input[type="radio"]');
+                if (radio.checked) {
+                    option.classList.add('checked');
+                } else {
+                    option.classList.remove('checked');
+                }
+            });
+            
+            validateForm1();
+        }
+
+        // ===== LEVEL SELECTION =====
+        function selectLevel(level) {
+            state.level = level;
+            
+            // Update UI
+            document.querySelectorAll('#screen-form2 .card').forEach(c => c.classList.remove('selected'));
+            event.target.closest('.card').classList.add('selected');
+            
+            document.getElementById('btn-next-2').disabled = false;
+        }
+
+        // ===== STYLE SELECTION =====
+        function selectStyle(style) {
+            state.style = style;
+            
+            // Update UI
+            document.querySelectorAll('#screen-form3 .card').forEach(c => c.classList.remove('selected'));
+            event.target.closest('.card').classList.add('selected');
+            
+            document.getElementById('btn-next-3').disabled = false;
+        }
+
+        // ===== SKIP TO RESULTS =====
+        function skipToResults() {
+            // Set defaults
+            if (!state.level) state.level = 'intermediate';
+            if (!state.style) state.style = 'allmountain';
+            
+            calculateResults();
+        }
+
+        // ===== CALCULATIONS =====
+        function calculateResults() {
+            const { category, gender, weight, height, age, level, style } = state;
+            
+            let length, rangeMin, rangeMax, description;
+            
+            if (category === 'ski') {
+                // SKI ALGORITHM
+                const result = calculateSkiLength(height, weight, age, gender, level, style);
+                length = result.recommended;
+                rangeMin = result.range.min;
+                rangeMax = result.range.max;
+                description = result.description;
+            } else {
+                // SNOWBOARD ALGORITHM (default)
+                const result = calculateSnowboardLength(height, weight, age, level, style);
+                length = result.recommended;
+                rangeMin = result.range.min;
+                rangeMax = result.range.max;
+                description = result.description;
             }
+            
+            // Display results
+            document.getElementById('result-length').textContent = length + ' cm';
+            document.getElementById('result-range').textContent = `(zakres: ${rangeMin}-${rangeMax} cm)`;
+            document.getElementById('result-description').textContent = description;
+            
+            // Update title
+            const title = category === 'ski' ? '⛷️ TWOJE IDEALNE NARTY' : '🏂 TWOJA IDEALNA DESKA';
+            document.getElementById('results-title').textContent = title;
+            
+            // Shopping advice
+            updateShoppingAdvice(category, level, style);
+            
+            // Technical params
+            updateTechnicalParams(category, level, style);
+            
+            // Show gender hint if not selected
+            document.getElementById('gender-hint').style.display = gender ? 'none' : 'block';
+            
+            goToScreen('results');
+        }
 
-            if (level) {
-                if (level === 'beginner') baseLength -= 4;
-                else if (level === 'expert') baseLength += 2;
+        function calculateSkiLength(height, weight, age, gender, level, style) {
+            let baseLength = height;
+            
+            // Step 1: Base (gender + level)
+            if (level === 'beginner') {
+                baseLength -= 20;
+            } else if (level === 'intermediate') {
+                if (gender === 'female') {
+                    baseLength -= 20;
+                } else if (gender === 'male') {
+                    baseLength -= 15;
+                } else {
+                    baseLength -= 17; // Average
+                }
+            } else if (level === 'advanced') {
+                if (gender === 'female') {
+                    baseLength -= 15;
+                } else if (gender === 'male') {
+                    baseLength -= 10;
+                } else {
+                    baseLength -= 12;
+                }
+            } else if (level === 'expert') {
+                baseLength -= 5;
             }
-
-            // SINGLE style
-            if (style) {
-                if (style === 'freestyle') baseLength -= 6;
-                else if (style === 'freeride') baseLength += 4;
-                else if (style === 'powder') baseLength += 10;
+            
+            // Step 2: Weight adjustment
+            const multiplier = (gender === 'female') ? 0.85 : 0.9;
+            const expectedWeight = (height - 100) * multiplier;
+            
+            if (weight > expectedWeight * 1.2) {
+                baseLength += 5;
+            } else if (weight < expectedWeight * 0.8) {
+                baseLength -= 5;
             }
-
-            baseLength = Math.round(baseLength);
-
-            let shape = null, profile = null, flex = null;
-
-            if (level && style) {
-                // Shape
-                if (style === 'freestyle') shape = 'Twin';
-                else if (style === 'freeride' || style === 'powder') shape = 'Directional';
-                else shape = 'Directional Twin';
-
-                // Profile
-                if (level === 'beginner') profile = 'Rocker';
-                else if (level === 'intermediate' && style === 'freestyle') profile = 'Flat';
-                else if ((level === 'advanced' || level === 'expert') && style === 'freestyle') profile = 'Hybrid';
-                else if ((level === 'advanced' || level === 'expert') && style === 'freeride') profile = 'Camber';
-                else if ((level === 'advanced' || level === 'expert') && style === 'powder') profile = 'Rocker';
-                else profile = 'Hybrid';
-
-                // Flex
-                let flexBase = level === 'beginner' ? 3 : level === 'intermediate' ? 5 : level === 'advanced' ? 6 : 7;
-                if (style === 'freestyle') flexBase -= 1;
-                if (style === 'freeride' || style === 'powder') flexBase += 1;
-                if (weight && weight > 85) flexBase += 1;
-                if (weight && weight < 55) flexBase -= 1;
-                flex = Math.max(1, Math.min(10, flexBase));
+            
+            // Step 3: Style adjustment
+            if (style === 'freestyle') {
+                baseLength -= 5;
+            } else if (style === 'freeride') {
+                baseLength += 5;
+            } else if (style === 'carving') {
+                baseLength -= 5;
             }
-
-            state.results = {
-                isChild: false,
-                length: baseLength,
-                rangeMin: baseLength - 3,
-                rangeMax: baseLength + 3,
-                shape,
-                profile,
-                flex,
-                hasFullData: !!(level && style)
+            
+            const skiLength = Math.round(baseLength);
+            const diff = height - skiLength;
+            
+            let desc = `${diff} cm krótsze od wzrostu`;
+            if (diff >= 20) desc = `${diff} cm krótsze (do brody)`;
+            else if (diff >= 15) desc = `${diff} cm krótsze (do nosa)`;
+            
+            return {
+                recommended: skiLength,
+                range: { min: skiLength - 5, max: skiLength + 5 },
+                description: desc
             };
         }
 
-        function getChildBoardLength(height) {
-            if (!height) return { min: 80, max: 90 };
-            if (height <= 100) return { min: 80, max: 85 };
-            if (height <= 110) return { min: 85, max: 95 };
-            if (height <= 120) return { min: 95, max: 105 };
-            if (height <= 130) return { min: 105, max: 115 };
-            if (height <= 140) return { min: 115, max: 125 };
-            if (height <= 150) return { min: 125, max: 135 };
-            return { min: 130, max: 140 };
+        function calculateSnowboardLength(height, weight, age, level, style) {
+            let baseLength = height - 15; // Start 15cm shorter
+            
+            // Age/level adjustment
+            if (age < 15) {
+                baseLength = height - 25; // Kids shorter
+            } else if (level === 'beginner') {
+                baseLength -= 5;
+            } else if (level === 'expert') {
+                baseLength += 5;
+            }
+            
+            // Weight adjustment
+            const expectedWeight = (height - 100) * 0.9;
+            if (weight > expectedWeight * 1.2) {
+                baseLength += 3;
+            } else if (weight < expectedWeight * 0.8) {
+                baseLength -= 3;
+            }
+            
+            // Style adjustment
+            if (style === 'freestyle') {
+                baseLength -= 3;
+            } else if (style === 'freeride' || style === 'powder') {
+                baseLength += 3;
+            }
+            
+            const boardLength = Math.round(baseLength);
+            const diff = height - boardLength;
+            
+            return {
+                recommended: boardLength,
+                range: { min: boardLength - 3, max: boardLength + 3 },
+                description: `${diff} cm krótsze od wzrostu`
+            };
         }
 
-        function displayResults() {
-            const { length, rangeMin, rangeMax, shape, profile, flex, isChild, hasFullData } = state.results;
-            const { level, style } = state.formData;
-
-            document.getElementById('result-length').textContent = length;
-            document.getElementById('result-range').textContent = `Zakres: ${rangeMin}-${rangeMax} cm`;
-
-            let adviceHTML = '';
-            if (isChild) {
-                adviceHTML = `
-                    <div class="result-advice-item"><span>✅</span><span>Deska dziecięca ${rangeMin}-${rangeMax}cm</span></div>
-                    <div class="result-advice-item"><span>✅</span><span>Dla początkujących, miękka</span></div>
-                    <div class="result-advice-item"><span>💡</span><span>Ważne żeby było wygodnie!</span></div>
-                `;
-            } else if (hasFullData) {
-                const styleText = {allmountain: 'all-mountain', freestyle: 'freestyle', freeride: 'freeride', powder: 'powder'}[style] || 'uniwersalnej';
-                const levelText = {beginner: 'początkujących', intermediate: 'średniozaawansowanych', advanced: 'zaawansowanych', expert: 'ekspertów'}[level] || 'wszystkich';
-                const flexText = flex <= 3 ? 'Miękka' : flex <= 5 ? 'Średnia' : flex <= 7 ? 'Średnio-twarda' : 'Twarda';
-                adviceHTML = `
-                    <div class="result-advice-item"><span>✅</span><span>Deska ${styleText}</span></div>
-                    <div class="result-advice-item"><span>✅</span><span>Dla ${levelText}</span></div>
-                    <div class="result-advice-item"><span>✅</span><span>${flexText} twardość</span></div>
-                `;
-            } else {
-                adviceHTML = `
-                    <div class="result-advice-item"><span>✅</span><span>Deska ${length}cm (±3cm)</span></div>
-                    <div class="result-advice-item"><span>✅</span><span>Uniwersalna</span></div>
-                    <div class="result-advice-item"><span>💡</span><span><a href="#" onclick="restart(); return false;" style="color: #00D9FF;">Uzupełnij dane</a> dla dokładniejszej rekomendacji</span></div>
-                `;
-            }
-            document.getElementById('advice-list').innerHTML = adviceHTML;
-
-            let sellerText = '';
-            if (isChild) {
-                sellerText = `Szukam deski dziecięcej ${rangeMin}-${rangeMax}cm, miękkiej, dla początkujących.`;
-            } else if (hasFullData) {
-                const styleText = {allmountain: 'all-mountain', freestyle: 'freestyle', freeride: 'freeride', powder: 'powder'}[style];
-                const levelText = {beginner: 'początkujących', intermediate: 'średniozaawansowanych', advanced: 'zaawansowanych', expert: 'ekspertów'}[level];
-                const flexText = flex <= 3 ? 'miękką' : flex <= 5 ? 'średnią' : flex <= 7 ? 'średnio-twardą' : 'twardą';
-                sellerText = `Szukam deski ${styleText} ${length}cm, ${flexText}, dla ${levelText}.`;
-            } else {
-                sellerText = `Szukam uniwersalnej deski około ${length}cm (±3cm).`;
-            }
-            document.getElementById('seller-text').textContent = sellerText;
-
-            if (hasFullData && !isChild) {
-                const shapeText = shape === 'Twin' ? 'Symetryczna (Twin)' : shape === 'Directional' ? 'Kierunkowa (Directional)' : 'Uniwersalna (Directional Twin)';
-                const profileText = profile === 'Rocker' ? 'Rocker (Banana)' : profile === 'Camber' ? 'Camber (Klasyczny)' : profile === 'Flat' ? 'Flat (Płaski)' : 'Hybrid (Mieszany)';
-                const flexName = flex <= 3 ? 'Miękki' : flex <= 5 ? 'Średni' : flex <= 7 ? 'Średnio-twardy' : 'Twardy';
-                
-                document.getElementById('param-shape').textContent = shapeText;
-                document.getElementById('param-profile').textContent = profileText;
-                document.getElementById('param-flex').textContent = `${flex}/10 - ${flexName}`;
-                document.getElementById('tech-toggle').style.display = 'block';
-            } else {
-                document.getElementById('tech-toggle').style.display = 'none';
-            }
-
-            document.getElementById('logged-actions').style.display = state.isLoggedIn ? 'block' : 'none';
+        function updateShoppingAdvice(category, level, style) {
+            const levelNames = {
+                beginner: 'początkujących',
+                intermediate: 'średniozaawansowanych',
+                advanced: 'zaawansowanych',
+                expert: 'ekspertów'
+            };
+            
+            const styleNames = {
+                allmountain: category === 'ski' ? 'Narty all-mountain' : 'Deska all-mountain',
+                freestyle: category === 'ski' ? 'Narty freestyle' : 'Deska freestyle',
+                freeride: category === 'ski' ? 'Narty freeride' : 'Deska freeride',
+                powder: 'Deska powder',
+                carving: 'Narty carving',
+                touring: 'Narty touring'
+            };
+            
+            const advice = [
+                styleNames[style] || 'Uniwersalna',
+                `Dla ${levelNames[level]}`,
+                'Średnia twardość (medium)'
+            ];
+            
+            document.getElementById('shopping-advice').innerHTML = advice.map(a => `<li>${a}</li>`).join('');
         }
 
-        function toggleTechParams() {
-            const tech = document.getElementById('tech-params');
-            const toggle = document.getElementById('tech-toggle');
-            if (tech.classList.contains('visible')) {
-                tech.classList.remove('visible');
-                toggle.innerHTML = '<span>🤓 Pokaż parametry</span><span>▼</span>';
+        function updateTechnicalParams(category, level, style) {
+            // Simplified - would be more complex in real app
+            const types = {
+                allmountain: 'All-Mountain (uniwersalne)',
+                freestyle: 'Freestyle (park)',
+                freeride: 'Freeride (powder)',
+                powder: 'Powder (głęboki śnieg)',
+                carving: 'Carving (slalom)',
+                touring: 'Touring (skitouring)'
+            };
+            
+            const flexes = {
+                beginner: 'Soft (miękkie, 3-4/10)',
+                intermediate: 'Medium (średnie, 5-6/10)',
+                advanced: 'Medium-Stiff (7-8/10)',
+                expert: 'Stiff (twarde, 8-9/10)'
+            };
+            
+            document.getElementById('tech-type').textContent = types[style] || 'All-Mountain';
+            document.getElementById('tech-flex').textContent = flexes[level] || 'Medium';
+            document.getElementById('tech-profile').textContent = 'Hybrid (camber+rocker)';
+            
+            if (category === 'snowboard') {
+                document.getElementById('tech-shape').textContent = 'Directional Twin';
             } else {
-                tech.classList.add('visible');
-                toggle.innerHTML = '<span>🤓 Ukryj parametry</span><span>▲</span>';
+                document.getElementById('tech-shape').parentElement.style.display = 'none';
             }
         }
 
-        function rate(stars) {
-            document.querySelectorAll('.star').forEach((star, i) => {
-                star.classList.toggle('active', i < stars);
+        function toggleTechnical() {
+            const params = document.getElementById('technical-params');
+            const btn = document.getElementById('toggle-tech');
+            
+            if (params.style.display === 'none') {
+                params.style.display = 'block';
+                btn.textContent = '🔼 Ukryj parametry techniczne';
+            } else {
+                params.style.display = 'none';
+                btn.textContent = '🔽 Pokaż parametry techniczne';
+            }
+        }
+
+        // ===== DIN CALCULATION =====
+        function calculateDIN() {
+            const bootSize = parseFloat(document.getElementById('boot-size').value);
+            const skierTypeInput = document.querySelector('input[name="skier-type"]:checked');
+            
+            if (!bootSize || !skierTypeInput) {
+                showToast('⚠️ Wypełnij wszystkie pola!');
+                return;
+            }
+            
+            const skierType = skierTypeInput.value;
+            const { weight, age, level } = state;
+            
+            // Simplified DIN calculation
+            let din = Math.floor(weight / 10);
+            
+            // Boot size adjustment
+            if (bootSize < 25) din -= 0.5;
+            if (bootSize > 31) din += 0.5;
+            
+            // Skier type
+            if (skierType === 'cautious') din -= 1;
+            if (skierType === 'aggressive') din += 1;
+            
+            // Age
+            if (age >= 50) din -= 1;
+            
+            // Level
+            if (level === 'beginner') din -= 0.5;
+            
+            // Limits
+            if (din < 2) din = 2;
+            if (din > 12) din = 12;
+            
+            // Round to 0.5
+            din = Math.round(din * 2) / 2;
+            
+            // Display
+            document.getElementById('din-value').textContent = din;
+            document.getElementById('din-range').textContent = `(zakres: ${din - 0.5} - ${din + 0.5})`;
+            
+            const typeNames = { cautious: 'Ostrożny', average: 'Przeciętny', aggressive: 'Agresywny' };
+            
+            document.getElementById('din-basis').innerHTML = `
+                <li>Waga: ${weight} kg</li>
+                <li>Rozmiar buta: ${bootSize} Mondo</li>
+                <li>Typ: ${typeNames[skierType]}</li>
+                <li>Wiek: ${age} lat</li>
+            `;
+            
+            goToScreen('din-results');
+        }
+
+        function copyDIN() {
+            const din = document.getElementById('din-value').textContent;
+            const range = document.getElementById('din-range').textContent;
+            const text = `DIN: ${din} ${range}\n⚠️ ORIENTACYJNIE - finalne ustawienie robi SERWIS!`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('✅ Skopiowano do schowka!');
             });
-            showToast(`⭐ Oceniono na ${stars}/5`);
         }
 
-        function copySellerText() {
-            const text = document.getElementById('seller-text').textContent;
-            navigator.clipboard.writeText(text).then(() => showToast('✅ Skopiowano!')).catch(() => showToast('❌ Błąd'));
+        // ===== THEME TOGGLE =====
+        function toggleTheme() {
+            document.body.classList.toggle('theme-light');
         }
 
-        function showCommentBox() {
-            showToast('💬 Funkcja dostępna wkrótce!');
-        }
-
-        function saveToHistory() {
-            showToast('✅ Zapisano!');
-        }
-
-        function restart() {
-            state.formData = {age: 25, weight: 70, height: 175, level: null, style: null};
-            state.results = {};
-            state.screenHistory = [];
-            
-            document.getElementById('age-input').value = 25;
-            document.getElementById('age-slider').value = 25;
-            document.getElementById('weight-input').value = 70;
-            document.getElementById('weight-slider').value = 70;
-            document.getElementById('height-input').value = 175;
-            document.getElementById('height-slider').value = 175;
-            
-            document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
-            document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
-            
-            document.getElementById('btn-form2-next').disabled = true;
-            document.getElementById('btn-form3-next').disabled = true;
-            validateForm1();
-            
-            showScreen('form1');
-        }
-
-        function showToast(msg) {
+        // ===== TOAST =====
+        function showToast(message) {
             const toast = document.getElementById('toast');
-            toast.textContent = msg;
+            toast.textContent = message;
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
-        document.getElementById('settingsModal').addEventListener('click', function(e) {
-            if (e.target === this) closeSettings();
+        // ===== INIT =====
+        window.addEventListener('load', () => {
+            validateForm1();
         });
-
-        validateForm1();
     </script>
 </body>
 </html>
