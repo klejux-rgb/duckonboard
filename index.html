@@ -1313,9 +1313,9 @@
                     <button class="btn-action">
                         🎓 Znaleźć instruktora
                     </button>
-                    <button class="btn-action" onclick="goToScreen('din-form')">
-                        ⚙️ Oblicz DIN
-                    </button>
+					<button class="btn-action" id="btn-calculate-din" onclick="goToScreen('din-form')" style="display: none;">
+						⚙️ Oblicz DIN
+					</button>
                 </div>
             </div>
         </div>
@@ -1654,6 +1654,11 @@
             }
             
             displayResults(result);
+			// Show/hide DIN button
+			const dinBtn = document.getElementById('btn-calculate-din');
+			if (dinBtn) {
+				dinBtn.style.display = state.category === 'ski' ? 'flex' : 'none';
+			}
         }
 
         function calculateSkiLength(height, weight, age, gender, level, style) {
