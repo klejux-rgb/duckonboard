@@ -1,9 +1,31 @@
 <!DOCTYPE html>
 <html lang="pl">
+<!-- ==================== HEAD ==================== -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🦆 DuckOnBoard - Find Your Perfect Board</title>
+	
+
+    <!-- ==================== Version ==================== -->
+	    <!-- 
+    WERSJA: 1.7
+    DATA: 2026-02-11
+    ZMIANY:
+    - Dodano Firebase Authentication (Google, Email, Anonymous)
+    - Dodano obrazki do kategorii (8 PNG)
+    - Dodano wylogowanie w Settings
+    
+    CHANGELOG:
+    v1.0 (2026-02-05) - Podstawowa struktura, formularze
+    v1.1 (2026-02-08) - Algorytmy snowboard/ski
+    v1.2 (2026-02-09) - Kalkulator DIN
+    v1.5 (2026-02-10) - Firebase + obrazki
+	v1.6 (2026-02-11) - komentarze w kodzie html
+	v1.6 (2026-02-12) - pakiet logowania dla biznesu
+    -->
+	
+	<!-- ==================== STYLES ==================== -->
     <style>
         * {
             margin: 0;
@@ -83,6 +105,8 @@
         }
 
         .settings-btn:hover {
+
+        /* ==================== CSS: Reset & Variables ==================== */
             background: rgba(0, 217, 255, 0.3);
             transform: rotate(90deg);
         }
@@ -183,6 +207,33 @@
             padding-bottom: 60px;
         }
 
+
+		/* ==================== CSS: Business Register ==================== */
+		.biz-step {
+			padding: 20px;
+		}
+
+		.biz-type-selected {
+			border: 2px solid #00D9FF !important;
+			background: rgba(0, 217, 255, 0.1) !important;
+		}
+
+		.biz-cat-selected {
+			border: 2px solid #00D9FF !important;
+			background: rgba(0, 217, 255, 0.1) !important;
+		}
+
+		.form-group {
+			margin-bottom: 16px;
+		}
+
+		textarea.form-input {
+			resize: vertical;
+			min-height: 80px;
+			font-family: inherit;
+		}
+
+        /* ==================== CSS: Theme System ==================== */
         .screen.active {
             display: block;
         }
@@ -278,60 +329,89 @@
         }
 
         /* Categories Grid */
+        /* KATEGORIE - Wariant 4 (czysty) */
         .categories-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+
+        /* ==================== CSS: Settings Modal ==================== */
             padding: 20px;
         }
 
         .category-card {
-            aspect-ratio: 1;
-            border-radius: 16px;
+            background: #1A1A1A;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #333;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 20px;
         }
 
-        .category-card.active {
-            opacity: 1;
-        }
-
-        .category-card.active:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 24px rgba(0, 217, 255, 0.3);
+        .category-card:hover {
+            transform: translateY(-5px);
+            border-color: #00D9FF;
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
         }
 
         .category-card.inactive {
-            opacity: 0.4;
+            opacity: 0.5;
             cursor: not-allowed;
         }
 
-        .category-icon {
-            font-size: 56px;
-            margin-bottom: 12px;
+        body.theme-standard-light .category-card {
+            background: #F5F5F5;
+            border-color: #CCC;
         }
 
-        .category-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: #fff;
-            text-align: center;
-            margin-bottom: 8px;
+        .category-card .category-image {
+            width: 100%;
+            aspect-ratio: 1;
+            overflow: hidden;
         }
 
-        .category-badge {
-            font-size: 11px;
-            background: rgba(255, 165, 0, 0.9);
-            padding: 4px 12px;
-            border-radius: 12px;
-            color: #fff;
+        .category-card .category-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .category-card:hover .category-image img {
+            transform: scale(1.05);
+        }
+
+        .category-card .category-icon {
+            display: none;
+        }
+
+        .category-card .category-name {
+            padding: 12px;
+            font-size: 14px;
             font-weight: 600;
+            text-align: center;
+            background: #0A0A0A;
+            color: #FFFFFF;
+        }
+
+        body.theme-standard-light .category-card .category-name {
+            background: #E0E0E0;
+            color: #0A0A0A;
+        }
+
+        .category-card .category-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #FFD700;
+            display: none;
         }
 
         /* Category colors */
@@ -356,6 +436,8 @@
         }
 
         .category-sup {
+
+        /* ==================== CSS: Screens & Layout ==================== */
             background: linear-gradient(135deg, #44CC44 0%, #339933 100%);
         }
 
@@ -456,6 +538,8 @@
 
         body.theme-standard-light .btn-secondary:hover {
             background: #E8E8E8;
+
+        /* ==================== CSS: Forms & Inputs ==================== */
         }
 
         .btn-skip {
@@ -556,6 +640,8 @@
         .radio-group {
             display: flex;
             flex-direction: column;
+
+        /* ==================== CSS: Buttons ==================== */
             gap: 12px;
         }
 
@@ -656,6 +742,8 @@
             color: #FFFFFF;
             transition: all 0.2s;
         }
+
+        /* ==================== CSS: Categories Grid ==================== */
 
         body.theme-standard-light input[type="number"],
         body.theme-standard-light input[type="text"] {
@@ -856,6 +944,8 @@
             font-size: 14px;
             cursor: pointer;
             margin-bottom: 16px;
+
+        /* ==================== CSS: Email Form ==================== */
         }
 
         body.theme-standard-light .toggle-technical {
@@ -906,6 +996,8 @@
         }
 
         body.theme-standard-light .param-value {
+
+        /* ==================== CSS: User Account Section ==================== */
             color: #0A0A0A;
         }
 
@@ -956,6 +1048,157 @@
                 gap: 12px;
             }
         }
+		/* Obrazki w kategoriach - Wariant 4 */
+        .category-card .category-image {
+            width: 100%;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .category-card .category-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .category-card:hover .category-image img {
+            transform: scale(1.05);
+        }
+
+        .category-card .category-icon {
+            display: none; /* Ukrywamy emoji gdy są obrazki */
+        }
+
+        .category-card .category-name {
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+        }
+		
+		/* User Account Section in Settings */
+        .user-account-section {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        body.theme-standard-light .user-account-section {
+            border-top-color: #CCC;
+        }
+
+        .user-info-display {
+            background: rgba(0, 217, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .user-name-display {
+            font-size: 16px;
+            font-weight: 600;
+            color: #00D9FF;
+            margin-bottom: 5px;
+        }
+
+        .user-email-display {
+            font-size: 14px;
+            color: #B0B0B0;
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 15px;
+            background: #FF4444;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #FF6666;
+            transform: translateY(-2px);
+        }
+		
+		/* Email Form */
+
+<!-- ==================== BODY ==================== -->
+        .email-form-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+
+    <!-- ==================== SETTINGS MODAL ==================== -->
+
+        .email-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px;
+            background: #1A1A1A;
+            border: 2px solid #333;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #FFFFFF;
+            transition: all 0.3s;
+        }
+
+        body.theme-standard-light .input-field {
+            background: #F5F5F5;
+            border-color: #CCC;
+            color: #0A0A0A;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #00D9FF;
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+        }
+
+        .toggle-auth-mode {
+            margin-top: 12px;
+            text-align: center;
+
+    <!-- ==================== TOAST NOTIFICATIONS ==================== -->
+            font-size: 14px;
+            color: #B0B0B0;
+            cursor: pointer;
+
+    <!-- ==================== APP CONTAINER ==================== -->
+        }
+        <!-- -------------------- SCREEN: Launch (Login) -------------------- -->
+
+
+        <!-- ==================== SCREENS ==================== -->
+        .toggle-auth-mode span {
+            color: #00D9FF;
+            text-decoration: underline;
+        }
+
+        .toggle-auth-mode:hover span {
+            color: #7B68EE;
+        }
+
+        .error-message {
+            background: rgba(255, 71, 87, 0.1);
+            border: 2px solid #FF4757;
+            color: #FF4757;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="theme-standard-dark">
@@ -982,12 +1225,22 @@
                     <span class="checkmark">✓</span>
                 </div>
             </div>
+			<div class="modal-section user-account-section" id="userAccountSection" style="display: none;">
+                <h3>TWOJE KONTO</h3>
+                <div class="user-info-display" id="userInfoDisplay">
+                    <div class="user-name-display" id="userNameDisplay">Ładowanie...</div>
+                    <div class="user-email-display" id="userEmailDisplay"></div>
+                </div>
+                <button class="btn-logout" id="logoutBtnSettings" onclick="handleLogout()">🚪 Wyloguj się</button>
+            </div>
 
             <button class="btn btn-primary" onclick="closeSettings()">Zamknij</button>
         </div>
     </div>
 
     <!-- Toast -->
+
+        <!-- -------------------- SCREEN: Categories -------------------- -->
     <div class="toast" id="toast"></div>
 
     <!-- App Container -->
@@ -1042,12 +1295,32 @@
                     <span>🍎</span>
                     <span>Zaloguj przez Apple</span>
                 </button>
-                <button class="btn btn-secondary" onclick="loginEmail()">
-                    <span>📧</span>
-                    <span>Zaloguj przez Email</span>
-                </button>
-            </div>
+				<button class="btn btn-secondary" onclick="showEmailForm()">
+					<span>📧</span>
+					<span>Zaloguj przez Email</span>
+				</button>
 
+				<!-- Formularz Email (ukryty domyślnie) -->
+
+        <!-- -------------------- SCREEN: Form 1 (Physical Data) -------------------- -->
+				<div id="emailFormSection" class="email-form-section" style="display: none;">
+					<div class="email-form">
+						<input type="email" id="emailInput" class="input-field" placeholder="Twój email">
+						<input type="password" id="passwordInput" class="input-field" placeholder="Hasło (min. 6 znaków)">
+						<button class="btn btn-primary" id="emailAuthBtn" onclick="handleEmailAuth()">Zaloguj się</button>
+						<div id="errorMessage" class="error-message" style="display: none;"></div>
+					</div>
+					<div class="toggle-auth-mode" onclick="toggleAuthMode()">
+						Nie masz konta? <span id="toggleText">Zarejestruj się</span>
+					</div>				
+				</div>
+            </div>
+			<div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #333;">
+				<p style="color: #B0B0B0; font-size: 14px; margin-bottom: 12px;">Jesteś wypożyczalnią, instruktorem lub sklepem?</p>
+				<button class="btn btn-secondary" onclick="goToScreen('business-register')" style="width: 100%;">
+					🏢 Zarejestruj konto biznesowe
+				</button>
+			</div>
             <div class="footer">
                 <a href="#">Privacy Policy</a> · 
                 <a href="#">Terms</a> · 
@@ -1066,49 +1339,61 @@
 
             <div class="categories-grid">
                 <div class="category-card active category-snowboard" onclick="selectCategory('snowboard')">
-                    <div class="category-icon">🏂</div>
-                    <div class="category-name">SNOWBOARD</div>
+                    <div class="category-image">
+                        <img src="button_category_snowboard.png" alt="Snowboard">
+                    </div>
+                    <div class="category-name">Snowboard</div>
                 </div>
                 
                 <div class="category-card active category-ski" onclick="selectCategory('ski')">
-                    <div class="category-icon">⛷️</div>
-                    <div class="category-name">SKI</div>
+                    <div class="category-image">
+                        <img src="button_category_ski.png" alt="Ski">
+                    </div>
+                    <div class="category-name">Ski</div>
                 </div>
                 
-                <div class="category-card inactive category-kite" onclick="selectCategory('kite')">
-                    <div class="category-icon">🪁</div>
-                    <div class="category-name">KITE</div>
-                    <div class="category-badge">🚧 SOON</div>
+                <div class="category-card inactive category-kite">
+                    <div class="category-image">
+                        <img src="button_category_katesurfing.png" alt="Kitesurfing">
+                    </div>
+                    <div class="category-name">Kitesurfing — Soon</div>
                 </div>
                 
-                <div class="category-card inactive category-wake" onclick="selectCategory('wake')">
-                    <div class="category-icon">🏄</div>
-                    <div class="category-name">WAKE</div>
-                    <div class="category-badge">🚧 SOON</div>
+                <div class="category-card inactive category-wake">
+                    <div class="category-image">
+                        <img src="button_category_Wake.png" alt="Wakeboard">
+                    </div>
+                    <div class="category-name">Wakeboard — Soon</div>
                 </div>
                 
-                <div class="category-card inactive category-surf" onclick="selectCategory('surf')">
-                    <div class="category-icon">🏄</div>
-                    <div class="category-name">SURF</div>
-                    <div class="category-badge">🚧 SOON</div>
+                <div class="category-card inactive category-surf">
+                    <div class="category-image">
+                        <img src="button_category_Surfing.png" alt="Surfing">
+                    </div>
+                    <div class="category-name">Surfing — Soon</div>
                 </div>
                 
-                <div class="category-card inactive category-sup" onclick="selectCategory('sup')">
-                    <div class="category-icon">🏄</div>
-                    <div class="category-name">SUP</div>
-                    <div class="category-badge">🚧 SOON</div>
+                <div class="category-card inactive category-sup">
+                    <div class="category-image">
+                        <img src="button_category_Sup.png" alt="SUP">
+                    </div>
+                    <div class="category-name">SUP — Soon</div>
+
+        <!-- -------------------- SCREEN: Form 2 (Level) -------------------- -->
                 </div>
                 
-                <div class="category-card inactive category-tennis" onclick="selectCategory('tennis')">
-                    <div class="category-icon">🎾</div>
-                    <div class="category-name">TENNIS</div>
-                    <div class="category-badge">🚧 SOON</div>
+                <div class="category-card inactive category-skate">
+                    <div class="category-image">
+                        <img src="button_category_skate.png" alt="Skateboard">
+                    </div>
+                    <div class="category-name">Skateboard — Soon</div>
                 </div>
                 
-                <div class="category-card inactive category-bike" onclick="selectCategory('bike')">
-                    <div class="category-icon">🚴</div>
-                    <div class="category-name">BIKE</div>
-                    <div class="category-badge">🚧 SOON</div>
+                <div class="category-card inactive category-wind">
+                    <div class="category-image">
+                        <img src="button_category_Windsurfing.png" alt="Windsurfing">
+                    </div>
+                    <div class="category-name">Windsurfing — Soon</div>
                 </div>
             </div>
         </div>
@@ -1135,6 +1420,8 @@
                             <input type="radio" name="gender" value="female" onchange="updateRadioStyle()">
                             <span>Kobieta</span>
                         </label>
+
+        <!-- -------------------- SCREEN: Form 3 (Style) -------------------- -->
                         <label class="radio-option">
                             <input type="radio" name="gender" value="male" onchange="updateRadioStyle()">
                             <span>Mężczyzna</span>
@@ -1166,6 +1453,8 @@
                 <div class="form-group">
                     <label class="form-label">Twój wiek:</label>
                     <div class="slider-group">
+
+        <!-- -------------------- SCREEN: Results -------------------- -->
                         <div class="slider-value-display" id="age-display">25</div>
                         <input type="range" id="age" min="3" max="99" value="25" oninput="updateSlider('age')">
                     </div>
@@ -1265,6 +1554,8 @@
                     <div class="result-range" id="result-range">(zakres: 153-159 cm)</div>
                 </div>
 
+        <!-- -------------------- SCREEN: DIN Calculator -------------------- -->
+
                 <div class="result-advice">
                     <h3>💬 CZEGO SZUKAĆ W SKLEPIE:</h3>
                     <div id="advice-list"></div>
@@ -1313,6 +1604,8 @@
                     <button class="btn-action">
                         🎓 Znaleźć instruktora
                     </button>
+
+        <!-- -------------------- SCREEN: DIN Results -------------------- -->
 					<button class="btn-action" id="btn-calculate-din" onclick="goToScreen('din-form')" style="display: none;">
 						⚙️ Oblicz DIN
 					</button>
@@ -1392,6 +1685,8 @@
                     <div id="din-basis"></div>
                 </div>
 
+
+    <!-- ==================== JAVASCRIPT: MAIN LOGIC ==================== -->
                 <div style="padding: 20px; background: rgba(255, 0, 0, 0.1); border-radius: 12px; margin: 24px 0;">
                     <h3 style="font-size: 16px; margin-bottom: 12px; color: #FF6666;">⚠️ BARDZO WAŻNE:</h3>
                     <p style="font-size: 14px; line-height: 1.6;">
@@ -1400,6 +1695,8 @@
                         Nieprawidłowe DIN = ryzyko poważnej kontuzji kolana!<br><br>
                         <strong>Nie próbuj ustawiać samodzielnie!</strong>
                     </p>
+
+        <!-- -------------------- Settings & Theme -------------------- -->
                 </div>
 
                 <div class="action-buttons">
@@ -1412,6 +1709,185 @@
                 </div>
             </div>
         </div>
+		<!-- ==================== SCREEN: Business Register ==================== -->
+		<div id="screen-business-register" class="screen">
+			<div class="header">
+				<div class="header-nav">
+					<button class="btn-back" onclick="goToScreen('launch')">←</button>
+					<span class="progress-indicator">Konto biznesowe</span>
+					<div style="width: 44px;"></div>
+				</div>
+				<div class="header-title">🏢 Rejestracja firmy</div>
+			</div>
+
+			<div class="content">
+
+				<!-- KROK 1: Typ firmy -->
+				<div id="biz-step-1" class="biz-step">
+					<p class="form-label" style="margin-bottom: 20px;">Kim jesteś?</p>
+
+					<div class="card" id="biz-type-rental" onclick="selectBizType('rental')" style="cursor:pointer; margin-bottom: 12px;">
+						<div class="card-title">🎿 Wypożyczalnia sprzętu</div>
+						<div class="card-description">Wynajmujesz deski, narty, buty i akcesoria</div>
+					</div>
+
+					<div class="card" id="biz-type-instructor" onclick="selectBizType('instructor')" style="cursor:pointer; margin-bottom: 12px;">
+						<div class="card-title">🎓 Instruktor</div>
+						<div class="card-description">Prowadzisz lekcje jako osoba fizyczna</div>
+					</div>
+
+					<div class="card" id="biz-type-school" onclick="selectBizType('school')" style="cursor:pointer; margin-bottom: 12px;">
+						<div class="card-title">🏫 Szkółka</div>
+						<div class="card-description">Prowadzisz szkółkę z instruktorami</div>
+					</div>
+
+					<div class="card" id="biz-type-shop" onclick="selectBizType('shop')" style="cursor:pointer; margin-bottom: 12px;">
+						<div class="card-title">🛒 Sklep sportowy</div>
+						<div class="card-description">Sprzedajesz sprzęt sportowy</div>
+					</div>
+
+					<button class="btn btn-primary" id="biz-btn-step1" onclick="bizGoToStep(2)" disabled style="width: 100%; margin-top: 8px;">
+						Dalej →
+					</button>
+				</div>
+
+				<!-- KROK 2: Dane firmy -->
+				<div id="biz-step-2" class="biz-step" style="display:none;">
+					<p class="form-label" style="margin-bottom: 20px;">Dane firmy</p>
+
+					<div class="form-group">
+						<label class="form-label">Nazwa firmy *</label>
+						<input type="text" id="biz-name" class="form-input" placeholder="np. Ski Rental Zakopane">
+					</div>
+
+					<div class="form-group">
+						<label class="form-label">NIP</label>
+						<input type="text" id="biz-nip" class="form-input" placeholder="np. 1234567890">
+					</div>
+
+					<div class="form-group">
+						<label class="form-label">Miasto *</label>
+						<input type="text" id="biz-city" class="form-input" placeholder="np. Zakopane">
+					</div>
+
+					<div class="form-group">
+						<label class="form-label">Adres</label>
+						<input type="text" id="biz-address" class="form-input" placeholder="np. ul. Krupówki 1">
+					</div>
+
+					<div class="form-group">
+						<label class="form-label">Telefon *</label>
+						<input type="tel" id="biz-phone" class="form-input" placeholder="np. 600123456">
+					</div>
+
+					<div class="form-group">
+						<label class="form-label">Email firmowy *</label>
+						<input type="email" id="biz-email" class="form-input" placeholder="np. kontakt@firma.pl">
+					</div>
+
+					<div class="form-group">
+						<label class="form-label">Opis działalności</label>
+						<textarea id="biz-description" class="form-input" rows="3" placeholder="Krótko opisz swoją ofertę..."></textarea>
+					</div>
+
+					<div class="form-group">
+						<label class="form-label">Godziny otwarcia</label>
+						<input type="text" id="biz-hours" class="form-input" placeholder="np. Pon-Pt 9:00-17:00, Sb 9:00-14:00">
+					</div>
+
+					<div style="display: flex; gap: 12px; margin-top: 8px;">
+						<button class="btn btn-secondary" onclick="bizGoToStep(1)" style="flex: 1;">
+							← Wstecz
+						</button>
+						<button class="btn btn-primary" id="biz-btn-step2" onclick="bizGoToStep(3)" disabled style="flex: 2;">
+							Dalej →
+						</button>
+					</div>
+				</div>
+
+				<!-- KROK 3: Kategorie + Szkoła (dla instruktora) + Regulamin -->
+				<div id="biz-step-3" class="biz-step" style="display:none;">
+
+					<p class="form-label" style="margin-bottom: 12px;">Kategorie sportowe *</p>
+					<div style="margin-bottom: 20px;">
+						<div class="card" id="biz-cat-snowboard" onclick="toggleBizCategory('snowboard')" style="cursor:pointer; margin-bottom: 8px; padding: 14px;">
+							<div style="display:flex; justify-content:space-between; align-items:center;">
+								<span>🏂 Snowboard</span>
+								<span id="biz-cat-snowboard-check" style="display:none; color:#00D9FF;">✓</span>
+							</div>
+						</div>
+						<div class="card" id="biz-cat-ski" onclick="toggleBizCategory('ski')" style="cursor:pointer; margin-bottom: 8px; padding: 14px;">
+							<div style="display:flex; justify-content:space-between; align-items:center;">
+								<span>⛷️ Ski</span>
+								<span id="biz-cat-ski-check" style="display:none; color:#00D9FF;">✓</span>
+							</div>
+						</div>
+						<div class="card" style="opacity:0.4; margin-bottom: 8px; padding: 14px;">
+							<div style="display:flex; justify-content:space-between; align-items:center;">
+								<span>🪁 Kite</span>
+								<span style="font-size:12px; color:#666;">🚧 SOON</span>
+							</div>
+						</div>
+						<div class="card" style="opacity:0.4; margin-bottom: 8px; padding: 14px;">
+							<div style="display:flex; justify-content:space-between; align-items:center;">
+								<span>🏄 Wake</span>
+								<span style="font-size:12px; color:#666;">🚧 SOON</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- Tylko dla instruktora: wybór szkółki -->
+					<div id="biz-school-section" style="display:none;">
+						<p class="form-label" style="margin-bottom: 12px;">Czy należysz do szkółki?</p>
+						<div style="margin-bottom: 20px;">
+							<label style="display:flex; align-items:center; gap:12px; margin-bottom:12px; cursor:pointer;">
+								<input type="radio" name="biz-school" value="none" checked onchange="toggleSchoolSelect(this.value)">
+								<span>Nie, jestem freelancerem</span>
+							</label>
+							<label style="display:flex; align-items:center; gap:12px; cursor:pointer;">
+								<input type="radio" name="biz-school" value="select" onchange="toggleSchoolSelect(this.value)">
+								<span>Tak, należę do szkółki</span>
+							</label>
+							<div id="biz-school-select-wrap" style="display:none; margin-top:12px;">
+								<select id="biz-school-id" class="form-input">
+									<option value="">-- Wybierz szkółkę --</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<!-- Regulamin -->
+					<div style="margin-bottom: 20px;">
+						<label style="display:flex; align-items:flex-start; gap:12px; cursor:pointer;">
+							<input type="checkbox" id="biz-terms" onchange="validateBizStep3()" style="margin-top:3px; flex-shrink:0;">
+							<span style="font-size:14px; color:#B0B0B0;">Akceptuję regulamin aplikacji i politykę prywatności DuckOnBoard</span>
+						</label>
+					</div>
+
+					<div style="display: flex; gap: 12px;">
+						<button class="btn btn-secondary" onclick="bizGoToStep(2)" style="flex: 1;">
+							← Wstecz
+						</button>
+						<button class="btn btn-primary" id="biz-btn-step3" onclick="submitBusinessRegistration()" disabled style="flex: 2;">
+							Zarejestruj firmę
+						</button>
+					</div>
+				</div>
+
+				<!-- POTWIERDZENIE -->
+				<div id="biz-step-confirm" class="biz-step" style="display:none; text-align:center; padding: 40px 20px;">
+					<div style="font-size: 64px; margin-bottom: 20px;">🎉</div>
+					<h2 style="color: #00D9FF; margin-bottom: 16px;">Rejestracja wysłana!</h2>
+					<p style="color: #B0B0B0; margin-bottom: 12px;">Twoje konto biznesowe zostało utworzone i oczekuje na weryfikację.</p>
+					<p style="color: #B0B0B0; margin-bottom: 32px; font-size: 14px;">Skontaktujemy się z Tobą w ciągu 24-48 godzin.</p>
+					<button class="btn btn-primary" onclick="goToScreen('launch')" style="width: 100%;">
+						Wróć do logowania
+					</button>
+				</div>
+
+			</div>
+		</div>
+		<!-- ==================== END: Business Register ==================== -->		
     </div>
 
     <script>
@@ -1431,7 +1907,6 @@
         // INIT
         window.addEventListener('load', () => {
             loadTheme();
-            updateAdVisibility();
             validateForm1();
         });
 
@@ -1444,6 +1919,8 @@
         function changeTheme(theme) {
             document.body.className = 'theme-' + theme;
             localStorage.setItem('duckonboard-theme', theme);
+
+        /* -------------------- Authentication: Login Functions -------------------- */
             
             document.querySelectorAll('.theme-option').forEach(opt => {
                 opt.classList.remove('active');
@@ -1465,6 +1942,8 @@
         }
 
         function closeSettings() {
+
+        /* -------------------- Authentication: Logout -------------------- */
             document.getElementById('settingsModal').classList.remove('active');
         }
 
@@ -1502,59 +1981,157 @@
             goToScreen('launch');
         }
 
-        // LOGIN
-        function startAnonymous() {
-            state.isLoggedIn = false;
-            updateAdVisibility();
-            goToScreen('categories');
-        }
+		// Aktualizuj info o użytkowniku w Settings
+		async function startAnonymous() {
+			try {
+				await window.firebaseSignInAnonymously();
+				goToScreen('categories');
+			} catch (error) {
+				console.error('Błąd logowania anonimowego:', error);
+				alert('Błąd: ' + error.message);
+			}
+		}
 
-        function loginGoogle() {
-            showToast('🔄 Logowanie przez Google...');
-            setTimeout(() => {
-                state.isLoggedIn = true;
-                updateAdVisibility();
-                goToScreen('categories');
-            }, 1000);
-        }
+		async function loginGoogle() {
+			try {
+				await window.firebaseSignInWithPopup(window.firebaseGoogleProvider);
+				goToScreen('categories');
+			} catch (error) {
+				console.error('Błąd logowania Google:', error);
+				alert('Błąd: ' + error.message);
+			}
+		}
 
-        function loginFacebook() {
-            showToast('🔄 Logowanie przez Facebook...');
-            setTimeout(() => {
-                state.isLoggedIn = true;
-                updateAdVisibility();
-                goToScreen('categories');
-            }, 1000);
-        }
+		async function handleLogout() {
+			try {
+				await window.firebaseSignOut();
+				alert('Wylogowano pomyślnie!');
+				goToScreen('launch');
+				closeSettings();
+			} catch (error) {
+				console.error('Błąd wylogowania:', error);
+				alert('Błąd wylogowania: ' + error.message);
+			}
 
-        function loginApple() {
-            showToast('🔄 Logowanie przez Apple...');
-            setTimeout(() => {
-                state.isLoggedIn = true;
-                updateAdVisibility();
-                goToScreen('categories');
-            }, 1000);
-        }
+        /* -------------------- Authentication: Email/Password -------------------- */
+		}
 
-        function loginEmail() {
-            showToast('🔄 Logowanie przez Email...');
-            setTimeout(() => {
-                state.isLoggedIn = true;
-                updateAdVisibility();
-                goToScreen('categories');
-            }, 1000);
-        }
+		// EMAIL LOGOWANIE
+		let isLoginMode = true;
 
-        function updateAdVisibility() {
-            const formAds = ['ad-form1', 'ad-form2', 'ad-form3'];
-            formAds.forEach(id => {
-                const ad = document.getElementById(id);
-                if (ad) {
-                    ad.classList.toggle('hidden', state.isLoggedIn);
-                }
-            });
-        }
+		function showEmailForm() {
+			const formSection = document.getElementById('emailFormSection');
+			formSection.style.display = formSection.style.display === 'none' ? 'block' : 'none';
+		}
 
+		function toggleAuthMode() {
+			isLoginMode = !isLoginMode;
+			const authBtn = document.getElementById('emailAuthBtn');
+			const toggleText = document.getElementById('toggleText');
+			
+			if (isLoginMode) {
+				authBtn.textContent = 'Zaloguj się';
+				toggleText.textContent = 'Zarejestruj się';
+			} else {
+				authBtn.textContent = 'Zarejestruj się';
+				toggleText.textContent = 'Zaloguj się';
+			}
+			
+			hideError();
+		}
+
+		async function handleEmailAuth() {
+			const email = document.getElementById('emailInput').value.trim();
+			const password = document.getElementById('passwordInput').value;
+			
+			if (!email || !password) {
+				showError('Wypełnij wszystkie pola');
+				return;
+			}
+			
+			if (password.length < 6) {
+				showError('Hasło musi mieć minimum 6 znaków');
+				return;
+			}
+			
+			try {
+				const auth = window.firebaseAuth;
+				
+				if (isLoginMode) {
+					// Logowanie
+					const { signInWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js');
+					await signInWithEmailAndPassword(auth, email, password);
+				} else {
+					// Rejestracja
+					const { createUserWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js');
+					await createUserWithEmailAndPassword(auth, email, password);
+				}
+				
+				// Wyczyść formularz
+				document.getElementById('emailInput').value = '';
+				document.getElementById('passwordInput').value = '';
+				hideError();
+				
+				// Przejdź do kategorii (automatycznie przez onAuthStateChanged)
+				
+			} catch (error) {
+				console.error('Błąd email auth:', error);
+				
+				if (error.code === 'auth/email-already-in-use') {
+					showError('Ten email jest już zarejestrowany');
+				} else if (error.code === 'auth/invalid-email') {
+					showError('Nieprawidłowy format email');
+				} else if (error.code === 'auth/user-not-found') {
+					showError('Nie znaleziono użytkownika');
+				} else if (error.code === 'auth/wrong-password') {
+					showError('Nieprawidłowe hasło');
+				} else if (error.code === 'auth/invalid-credential') {
+					showError('Nieprawidłowy email lub hasło');
+				} else {
+					showError('Błąd: ' + error.message);
+				}
+			}
+		}
+
+		function showError(message) {
+			const errorDiv = document.getElementById('errorMessage');
+			errorDiv.textContent = message;
+			errorDiv.style.display = 'block';
+			
+			setTimeout(() => {
+				hideError();
+			}, 5000);
+		}
+
+		function hideError() {
+			const errorDiv = document.getElementById('errorMessage');
+			errorDiv.style.display = 'none';
+		}
+
+
+        /* -------------------- Navigation & Categories -------------------- */
+		function loginEmail() {
+			showEmailForm();
+		}
+
+		function loginFacebook() {
+			alert('Facebook login - wkrótce!');
+		}
+
+		function loginApple() {
+			alert('Apple login - wkrótce!');
+		}
+		
+		/*
+		// Observer stanu użytkownika
+		window.onAuthStateChanged(window.firebaseAuth, (user) => {
+			if (user) {
+				console.log('Zalogowany:', user.email || user.uid);
+			} else {
+				console.log('Wylogowany');
+			}
+		});
+		*/
         // CATEGORIES
         function selectCategory(category) {
             if (['kite', 'wake', 'surf', 'sup', 'tennis', 'bike'].includes(category)) {
@@ -1575,6 +2152,8 @@
                     { value: 'freeride', icon: '⛰️', title: 'FREERIDE', desc: 'Poza trasą, głęboki śnieg' },
                     { value: 'powder', icon: '❄️', title: 'POWDER', desc: 'Bardzo głęboki śnieg' }
                 ],
+
+        /* -------------------- Form Validation & UI Updates -------------------- */
                 ski: [
                     { value: 'allmountain', icon: '🏔️', title: 'ALL-MOUNTAIN', desc: 'Wszędzie - stok, różne warunki' },
                     { value: 'freestyle', icon: '🎪', title: 'FREESTYLE', desc: 'Skoki, trick\'i, park' },
@@ -1638,6 +2217,8 @@
 
         function skipToResults() {
             if (!state.level) state.level = 'intermediate';
+
+        /* -------------------- Calculations: Algorithms -------------------- */
             if (!state.style) state.style = 'allmountain';
             calculateResults();
         }
@@ -1748,6 +2329,8 @@
                 powder: 'Deska powder',
                 carving: 'Narty carving',
                 touring: 'Narty touring'
+
+        /* -------------------- Results Display -------------------- */
             };
             
             const advice = [
@@ -1805,6 +2388,8 @@
             if (skierType === 'cautious') din -= 1;
             if (skierType === 'aggressive') din += 1;
             
+
+        /* -------------------- DIN Calculator -------------------- */
             if (age >= 50) din -= 1;
             if (level === 'beginner') din -= 0.5;
             
@@ -1816,6 +2401,8 @@
             document.getElementById('din-value').textContent = din;
             document.getElementById('din-range').textContent = `(zakres: ${din - 0.5} - ${din + 0.5})`;
             
+
+        /* -------------------- Utilities: Toast -------------------- */
             const typeNames = { cautious: 'Ostrożny', average: 'Przeciętny', aggressive: 'Agresywny' };
             
             document.getElementById('din-basis').innerHTML = `
@@ -1828,6 +2415,8 @@
             goToScreen('din-results');
         }
 
+    /*-- ==================== FIREBASE SDK ==================== --*/
+
         function copyDIN() {
             const din = document.getElementById('din-value').textContent;
             const range = document.getElementById('din-range').textContent;
@@ -1837,6 +2426,224 @@
                 showToast('✅ Skopiowano do schowka!');
             });
         }
+
+		// ==================== BUSINESS REGISTER ====================
+
+		let bizState = {
+			type: null,
+			categories: []
+		};
+
+		function selectBizType(type) {
+			bizState.type = type;
+
+			// Reset wszystkich kart
+			['rental', 'instructor', 'school', 'shop'].forEach(t => {
+				const card = document.getElementById('biz-type-' + t);
+				if (card) card.classList.remove('biz-type-selected');
+			});
+
+			// Zaznacz wybraną
+			const selected = document.getElementById('biz-type-' + type);
+			if (selected) selected.classList.add('biz-type-selected');
+
+			// Aktywuj przycisk Dalej
+			document.getElementById('biz-btn-step1').disabled = false;
+		}
+
+		function bizGoToStep(step) {
+			// Walidacja kroku 2
+			if (step === 3) {
+				const name = document.getElementById('biz-name').value.trim();
+				const city = document.getElementById('biz-city').value.trim();
+				const phone = document.getElementById('biz-phone').value.trim();
+				const email = document.getElementById('biz-email').value.trim();
+				if (!name || !city || !phone || !email) {
+					showToast('⚠️ Wypełnij wymagane pola (*)');
+					return;
+				}
+			}
+
+			// Ukryj wszystkie kroki
+			['1', '2', '3', 'confirm'].forEach(s => {
+				const el = document.getElementById('biz-step-' + s);
+				if (el) el.style.display = 'none';
+			});
+
+			// Pokaż właściwy krok
+			const target = document.getElementById('biz-step-' + step);
+			if (target) target.style.display = 'block';
+
+			// Pokaż sekcję szkółki tylko dla instruktora
+			if (step === 3) {
+				const schoolSection = document.getElementById('biz-school-section');
+				if (schoolSection) {
+					schoolSection.style.display = bizState.type === 'instructor' ? 'block' : 'none';
+				}
+				// Załaduj listę szkółek jeśli instruktor
+				if (bizState.type === 'instructor') {
+					loadSchoolsList();
+				}
+				validateBizStep3();
+			}
+
+			window.scrollTo({ top: 0, behavior: 'instant' });
+		}
+
+		function toggleBizCategory(cat) {
+			const idx = bizState.categories.indexOf(cat);
+			const card = document.getElementById('biz-cat-' + cat);
+			const check = document.getElementById('biz-cat-' + cat + '-check');
+
+			if (idx === -1) {
+				bizState.categories.push(cat);
+				if (card) card.classList.add('biz-cat-selected');
+				if (check) check.style.display = 'block';
+			} else {
+				bizState.categories.splice(idx, 1);
+				if (card) card.classList.remove('biz-cat-selected');
+				if (check) check.style.display = 'none';
+			}
+
+			validateBizStep3();
+		}
+
+		function toggleSchoolSelect(value) {
+			const wrap = document.getElementById('biz-school-select-wrap');
+			if (wrap) {
+				wrap.style.display = value === 'select' ? 'block' : 'none';
+			}
+		}
+
+		async function loadSchoolsList() {
+			try {
+				const select = document.getElementById('biz-school-id');
+				if (!select) return;
+
+				const q = window.firestoreQuery(
+					window.firestoreCollection(window.firebaseDb, 'schools'),
+					window.firestoreWhere('status', '==', 'approved')
+				);
+
+				const snapshot = await window.firestoreGetDocs(q);
+				select.innerHTML = '<option value="">-- Wybierz szkółkę --</option>';
+
+				snapshot.forEach(doc => {
+					const data = doc.data();
+					const option = document.createElement('option');
+					option.value = doc.id;
+					option.textContent = data.name + ' (' + data.city + ')';
+					select.appendChild(option);
+				});
+
+				if (snapshot.empty) {
+					select.innerHTML = '<option value="">Brak zarejestrowanych szkółek</option>';
+				}
+			} catch (error) {
+				console.error('Błąd ładowania szkółek:', error);
+			}
+		}
+
+		function validateBizStep3() {
+			const hasCategory = bizState.categories.length > 0;
+			const hasTerms = document.getElementById('biz-terms')?.checked;
+			const btn = document.getElementById('biz-btn-step3');
+			if (btn) btn.disabled = !(hasCategory && hasTerms);
+		}
+
+		async function submitBusinessRegistration() {
+			try {
+				const auth = window.firebaseAuth;
+				const user = auth.currentUser;
+
+				if (!user) {
+					showToast('⚠️ Musisz być zalogowany');
+					return;
+				}
+
+				const name = document.getElementById('biz-name').value.trim();
+				const nip = document.getElementById('biz-nip').value.trim();
+				const city = document.getElementById('biz-city').value.trim();
+				const address = document.getElementById('biz-address').value.trim();
+				const phone = document.getElementById('biz-phone').value.trim();
+				const email = document.getElementById('biz-email').value.trim();
+				const description = document.getElementById('biz-description').value.trim();
+				const hours = document.getElementById('biz-hours').value.trim();
+
+				// Szkółka dla instruktora
+				let schoolId = null;
+				if (bizState.type === 'instructor') {
+					const schoolRadio = document.querySelector('input[name="biz-school"]:checked');
+					if (schoolRadio && schoolRadio.value === 'select') {
+						schoolId = document.getElementById('biz-school-id').value || null;
+					}
+				}
+
+				// Dane wspólne
+				const bizData = {
+					type: bizState.type,
+					name: name,
+					nip: nip,
+					city: city,
+					address: address,
+					phone: phone,
+					email: email,
+					description: description,
+					openingHours: hours,
+					categories: bizState.categories,
+					status: 'pending',
+					logoUrl: '',
+					galleryUrls: [],
+					rating: 0,
+					reviewsCount: 0,
+					followers: [],
+					createdAt: window.firebaseServerTimestamp()
+				};
+
+				// Dodaj schoolId dla instruktora
+				if (bizState.type === 'instructor') {
+					bizData.schoolId = schoolId;
+					bizData.avatarUrl = '';
+					bizData.certifications = [];
+					bizData.pricePerHour = { child: 0, junior: 0, adult: 0 };
+					bizData.availability = [];
+				}
+
+				// Wybór kolekcji
+				const collectionName = bizState.type === 'school' ? 'schools' :
+									   bizState.type === 'instructor' ? 'instructors' : 'businesses';
+
+				// Zapis do Firestore
+				await window.firestoreSetDoc(
+					window.firestoreDoc(window.firebaseDb, collectionName, user.uid),
+					bizData
+				);
+
+				// Zapis roli w users
+				await window.firestoreSetDoc(
+					window.firestoreDoc(window.firebaseDb, 'users', user.uid),
+					{
+						role: 'partner',
+						accountType: 'business',
+						businessType: bizState.type,
+						email: user.email || email,
+						createdAt: window.firebaseServerTimestamp()
+					}
+				);
+
+				// Pokaż potwierdzenie
+				['1', '2', '3'].forEach(s => {
+					const el = document.getElementById('biz-step-' + s);
+					if (el) el.style.display = 'none';
+				});
+				document.getElementById('biz-step-confirm').style.display = 'block';
+				window.scrollTo({ top: 0, behavior: 'instant' });
+
+			} catch (error) {
+				console.error('Błąd rejestracji biznesowej:', error);
+				showToast('❌ Błąd: ' + error.message);
+			}
+		}
 
         // TOAST
         function showToast(message) {
@@ -1848,6 +2655,100 @@
                 toast.classList.remove('show');
             }, 3000);
         }
+    </script>
+	<!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+		import { 
+			getFirestore,
+			doc,
+			setDoc,
+			getDoc,
+			updateDoc,
+			collection,
+			query,
+			where,
+			getDocs,
+			serverTimestamp
+		} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { 
+            getAuth, 
+            signInWithPopup, 
+            GoogleAuthProvider,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            signInAnonymously,
+            signOut,
+            onAuthStateChanged
+        } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkiDc3UJzz9ooUzRZ55HWh9ms-cF4YFWI",
+            authDomain: "duckonboard-69a2b.firebaseapp.com",
+            projectId: "duckonboard-69a2b",
+            storageBucket: "duckonboard-69a2b.firebasestorage.app",
+            messagingSenderId: "299574361615",
+            appId: "1:299574361615:web:5228c5c18821874864ed7a",
+            measurementId: "G-S0XDYWS6CF"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
+		const db = getFirestore(app);
+
+    
+		// Udostępnij Firebase globalnie
+		window.firebaseAuth = auth;
+		window.firebaseGoogleProvider = googleProvider;
+
+		// Funkcje logowania
+		window.firebaseSignInAnonymously = () => signInAnonymously(auth);
+		window.firebaseSignInWithPopup = (provider) => signInWithPopup(auth, provider);
+		window.firebaseSignOut = () => signOut(auth);
+		window.firebaseDb = db;
+		window.firebaseServerTimestamp = serverTimestamp;
+		window.firestoreDoc = doc;
+		window.firestoreSetDoc = setDoc;
+		window.firestoreGetDoc = getDoc;
+		window.firestoreUpdateDoc = updateDoc;
+		window.firestoreCollection = collection;
+		window.firestoreQuery = query;
+		window.firestoreWhere = where;
+		window.firestoreGetDocs = getDocs;
+
+		// Observer - uruchom od razu
+		onAuthStateChanged(auth, (user) => {
+			const userSection = document.getElementById('userAccountSection');
+			const userName = document.getElementById('userNameDisplay');
+			const userEmail = document.getElementById('userEmailDisplay');
+			
+			console.log('Auth state changed:', user ? (user.email || 'Anonimowy') : 'Wylogowany');
+/* ==================== KONIEC FIREBASE SDK ==================== */
+			
+			if (user) {
+				// Użytkownik zalogowany
+				if (userSection) userSection.style.display = 'block';
+				
+				if (user.isAnonymous) {
+					if (userName) userName.textContent = '👤 Gość';
+					if (userEmail) userEmail.textContent = 'Tryb anonimowy';
+				} else {
+					if (userName) userName.textContent = user.displayName || user.email.split('@')[0];
+					if (userEmail) userEmail.textContent = user.email || '';
+				}
+				
+				// Jeśli jesteś na ekranie logowania - przejdź do kategorii
+				const currentScreen = document.querySelector('.screen.active');
+				if (currentScreen && currentScreen.id === 'screen-launch') {
+					goToScreen('categories');
+				}
+			} else {
+				// Użytkownik wylogowany
+				if (userSection) userSection.style.display = 'none';
+			}
+		});
     </script>
 </body>
 </html>
